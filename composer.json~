@@ -22,6 +22,7 @@
     "require": {
         "php": ">=5.5",
         "radnan/rdn-upload": "2.*",
+
     },
     "autoload": {
         "psr-0": {
