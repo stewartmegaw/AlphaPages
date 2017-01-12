@@ -40,7 +40,7 @@ return array(
             'alpha-page' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '[/:name]',
+                    'route' => '/home[/:name]',
                     'defaults' => array(
                         'controller' => 'AlphaPage\Controller\Page',
                         'action' => 'view',
