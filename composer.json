@@ -1,0 +1,33 @@
+{
+    "name": "stewartmegaw/alpha-solr",
+    "description": "CRUD Module for Apache Solr",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "homepage": "https://github.com/stewartmegaw/AlphaSolr",
+    "keywords": [
+        "apache",
+        "solr",
+        "solarium"
+    ],
+    "authors": [
+        {
+            "name": "Haris Mehmood",
+            "email": "haris.mehmood@outlook.com",
+            "homepage": "http://glide.design/",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=5.5",
+        "radnan/rdn-upload": "2.*",
+        "ewgo/solarium-module": "^1.0.2"
+
+    },
+    "autoload": {
+        "psr-0": {
+            "AlphaSolr\\": "src/"
+        }
+    }
+}
