@@ -1,9 +1,9 @@
 {
     "name": "stewartmegaw/alpha-page",
-    "description": "CRUD Module for Apache Solr",
+    "description": "CRUD Module for Apache Page",
     "type": "library",
     "license": "BSD-3-Clause",
-    "homepage": "https://github.com/stewartmegaw/AlphaSolr",
+    "homepage": "https://github.com/stewartmegaw/AlphaPage",
     "keywords": [
         "page",
         "homepage"
