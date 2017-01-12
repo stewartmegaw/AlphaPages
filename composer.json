@@ -5,9 +5,7 @@
     "license": "BSD-3-Clause",
     "homepage": "https://github.com/stewartmegaw/AlphaSolr",
     "keywords": [
-        "apache",
-        "solr",
-        "solarium"
+        "apache"
     ],
     "authors": [
         {
