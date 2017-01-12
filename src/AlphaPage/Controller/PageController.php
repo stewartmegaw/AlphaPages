@@ -56,6 +56,8 @@ class PageController extends AbstractActionController {
     public function viewAction() {
         $name = $this->params('name');
         $page = $this->pageService->getPageByName($name);
+        if ($page->getName() === 'charitable-work')
+            $this->layout('layout/charitablework-layout');
         return new ViewModel(['page' => $page]);
     }
 
