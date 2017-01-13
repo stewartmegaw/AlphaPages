@@ -23,8 +23,6 @@ class PageController extends AbstractActionController {
         $this->pageService = $pageService;
         $this->entityManager = $entityManager;
         $this->services = $services;
-        $this->services['config'] = $config;
-        $this->services['entitymanager'] = $entityManager;
     }
 
     public function editAction() {
@@ -68,10 +66,6 @@ class PageController extends AbstractActionController {
         //SET CONTENT AND SERVICE
         $viewModel->setVariable('page', $page);
         $viewModel->setVariable('services', $this->services);
-
-        //SET PARAMS
-        $viewModel->setVariable('param1', $this->params('param1', null));
-        $viewModel->setVariable('param2', $this->params('param2', null));
 
         return $viewModel;
     }

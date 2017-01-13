@@ -12,15 +12,25 @@ class PageControllerFactory implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
 
-        //Compulsory Services
-        $config = $serviceLocator->getServiceLocator()->get('config');
-        $entityManager = $serviceLocator->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-        $pageService = $serviceLocator->getServiceLocator()->get('AlphaPage\Service\Page');
-
         $services = [];
-        //Get Route Match
+
+        $config = $serviceLocator->getServiceLocator()->get('config');
+        $services['config'] = $config;
+
+        $entityManager = $serviceLocator->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $services['entityManager'] = $entityManager;
+
+
+        $pageService = $serviceLocator->getServiceLocator()->get('AlphaPage\Service\Page');
+        $services['pageService'] = $pageService;
+
+
         $router = $serviceLocator->getServiceLocator()->get('router');
+        $services['router'] = $router;
+
         $request = $serviceLocator->getServiceLocator()->get('request');
+        $services["request"] = $request;
+
         $routerMatch = $router->match($request);
 
         //Get Page Dependencies
