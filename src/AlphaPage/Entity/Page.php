@@ -38,6 +38,13 @@ class Page {
     /** @ORM\ManyToOne(targetEntity="\AlphaUserSubscription\Entity\User") */
     protected $editor;
 
+    /** @ORM\OneToMany(targetEntity="PageDependency", mappedBy="page") */
+    protected $dependencies;
+
+    public function __construct() {
+        $this->dependencies = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
     function getId() {
         return $this->id;
     }
@@ -76,6 +83,14 @@ class Page {
 
     function setEditor($editor) {
         $this->editor = $editor;
+    }
+
+    function setDependencies($dependencies) {
+        $this->dependencies = $dependencies;
+    }
+
+    function getDependencies() {
+        return $this->dependencies;
     }
 
     public function getArrayCopy() {

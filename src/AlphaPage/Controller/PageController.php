@@ -16,11 +16,15 @@ class PageController extends AbstractActionController {
     private $config;
     private $pageService;
     private $entityManager;
+    private $services;
 
-    public function __construct($config, EntityManager $entityManager, PageService $pageService) {
+    public function __construct($config, EntityManager $entityManager, PageService $pageService, $services) {
         $this->config = $config;
         $this->pageService = $pageService;
         $this->entityManager = $entityManager;
+        $this->services = $services;
+        $this->services['config'] = $config;
+        $this->services['entitymanager'] = $entityManager;
     }
 
     public function editAction() {
@@ -34,7 +38,7 @@ class PageController extends AbstractActionController {
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
             $this->pageService->updatePage($page->getId(), $data, $user);
             $this->flashMessenger()->addSuccessMessage('Page updated succesfully!');
-            $this->redirect()->toRoute('members-area/dashboard');
+            $this->redirect()->toRoute('alpha-page', ['name' => 'dashboard']);
         }
 
         $viewModel = new ViewModel();
@@ -54,11 +58,22 @@ class PageController extends AbstractActionController {
     }
 
     public function viewAction() {
-        $name = $this->params('name');
-        $page = $this->pageService->getPageByName($name);
-        if ($page->getName() === 'charitable-work')
-            $this->layout('layout/charitablework-layout');
-        return new ViewModel(['page' => $page]);
+
+        //Get page content from db
+        $page = $this->pageService->getPageByName($this->params('name'));
+
+        //View Model
+        $viewModel = new ViewModel();
+
+        //SET CONTENT AND SERVICE
+        $viewModel->setVariable('page', $page);
+        $viewModel->setVariable('services', $this->services);
+
+        //SET PARAMS
+        $viewModel->setVariable('param1', $this->params('param1', null));
+        $viewModel->setVariable('param2', $this->params('param2', null));
+
+        return $viewModel;
     }
 
 }
