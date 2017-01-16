@@ -35,7 +35,7 @@ $form->setAttributes(array(
 <script language="JavaScript">
     function formPreview(form) {
         form.target = '_blank';
-        form.action = '/page/preview';
+        form.action = '/page/preview/<?php echo $this->page->getName() ?>';
     }
 
     function formSubmit(form) {

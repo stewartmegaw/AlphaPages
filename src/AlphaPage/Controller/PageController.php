@@ -51,6 +51,7 @@ class PageController extends AbstractActionController {
         $page = $this->pageService->updatePage(\AlphaPage\Entity\Page::PREVIEW_PAGE_ID, $data);
         $view = new ViewModel();
         $view->setVariable('page', $page);
+        $view->setVariable('services', $this->services);
         $view->setTemplate('alpha-page/page/view.phtml');
         return $view;
     }

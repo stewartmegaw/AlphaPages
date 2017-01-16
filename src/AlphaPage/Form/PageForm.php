@@ -16,6 +16,7 @@ class PageForm extends Form {
             'name' => 'content',
             'type' => 'text',
             'attributes' => array(
+                'id' => 'code-mirror-textarea',
                 'required' => 'required',
                 'encoding' => 'UTF-8',
                 'cols' => '40',

@@ -35,6 +35,20 @@ return array(
             )
         ),
     ),
+    'bjyauthorize' => array(
+        'resource_providers' => array(
+            'BjyAuthorize\Provider\Resource\Config' => array(
+                'Collections' => array(),
+            ),
+        ),
+        'rule_providers' => array(
+            'BjyAuthorize\Provider\Rule\Config' => array(
+                'allow' => array(
+                    array(array('alpha'), 'Collections', array('edit-view')),
+                ),
+            ),
+        ),
+    ),
     'router' => array(
         'routes' => array(
         ),
