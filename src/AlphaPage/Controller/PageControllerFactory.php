@@ -30,18 +30,33 @@ class PageControllerFactory implements FactoryInterface {
 
         $request = $serviceLocator->getServiceLocator()->get('request');
         $services["request"] = $request;
-
         $routerMatch = $router->match($request);
+        $routeName = $routerMatch->getMatchedRouteName();
 
-        //Get Page Dependencies
-        $name = $routerMatch->getParam("name");
-        $page = $entityManager->getRepository('AlphaPage\Entity\Page')->findOneBy(['name' => $name]);
-        $dependencies = $page->getDependencies();
-        foreach ($dependencies as $dependency) {
-            $services[$dependency->getServiceName()] = $serviceLocator->getServiceLocator()->get($dependency->getServiceName());
+        switch ($routeName) {
+            case "crud-page":
+                $name = $routerMatch->getParam("name");
+                $page = $entityManager->getRepository('AlphaPage\Entity\Page')->findOneBy(['name' => $name]);
+                $dependencies = $page->getDependencies();
+                foreach ($dependencies as $dependency) {
+                    $services[$dependency->getServiceName()] = $serviceLocator->getServiceLocator()->get($dependency->getServiceName());
+                }
+                break;
+
+            default:
+                $route = $entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => null]);
+                $page = $route->getPage();
+                $dependencies = $page->getDependencies();
+
+                foreach ($dependencies as $dependency) {
+                    $services[$dependency->getServiceName()] = $serviceLocator->getServiceLocator()->get($dependency->getServiceName());
+                }
+                break;
         }
 
-        return new PageController($config, $entityManager, $pageService, $services);
+
+
+        return new PageController($config, $entityManager, $pageService, $services, $page);
     }
 
 }

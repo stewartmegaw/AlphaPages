@@ -17,12 +17,14 @@ class PageController extends AbstractActionController {
     private $pageService;
     private $entityManager;
     private $services;
+    private $page;
 
-    public function __construct($config, EntityManager $entityManager, PageService $pageService, $services) {
+    public function __construct($config, EntityManager $entityManager, PageService $pageService, $services, $page) {
         $this->config = $config;
         $this->pageService = $pageService;
         $this->entityManager = $entityManager;
         $this->services = $services;
+        $this->page = $page;
     }
 
     public function editAction() {
@@ -36,7 +38,7 @@ class PageController extends AbstractActionController {
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
             $this->pageService->updatePage($page->getId(), $data, $user);
             $this->flashMessenger()->addSuccessMessage('Page updated succesfully!');
-            $this->redirect()->toRoute('alpha-page', ['name' => 'dashboard']);
+            $this->redirect()->toRoute('dashboard');
         }
 
         $viewModel = new ViewModel();
@@ -58,17 +60,14 @@ class PageController extends AbstractActionController {
 
     public function viewAction() {
 
-        //Get page content from db
-        $page = $this->pageService->getPageByName($this->params('name'));
-
-        if (!empty($page->getLayout()))
-            $this->layout($page->getLayout());
+        if (!empty($this->page->getLayout()))
+            $this->layout($this->page->getLayout());
 
         //View Model
         $viewModel = new ViewModel();
 
         //SET CONTENT AND SERVICE
-        $viewModel->setVariable('page', $page);
+        $viewModel->setVariable('page', $this->page);
         $viewModel->setVariable('services', $this->services);
 
         return $viewModel;
