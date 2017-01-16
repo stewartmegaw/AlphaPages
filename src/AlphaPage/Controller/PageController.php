@@ -61,6 +61,9 @@ class PageController extends AbstractActionController {
         //Get page content from db
         $page = $this->pageService->getPageByName($this->params('name'));
 
+        if (!empty($page->getLayout()))
+            $this->layout($page->getLayout());
+
         //View Model
         $viewModel = new ViewModel();
 

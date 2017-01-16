@@ -41,6 +41,9 @@ class Page {
     /** @ORM\OneToMany(targetEntity="PageDependency", mappedBy="page") */
     protected $dependencies;
 
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $layout;
+
     public function __construct() {
         $this->dependencies = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -91,6 +94,14 @@ class Page {
 
     function getDependencies() {
         return $this->dependencies;
+    }
+
+    function setLayout($layout) {
+        $this->layout = $layout;
+    }
+
+    function getLayout() {
+        return $this->layout;
     }
 
     public function getArrayCopy() {
