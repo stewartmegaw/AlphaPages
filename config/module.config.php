@@ -37,25 +37,6 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'alpha-page' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/home[/:name][/:param1][/:param2]',
-                    'defaults' => array(
-                        'controller' => 'AlphaPage\Controller\Page',
-                        'action' => 'view',
-                    ),
-                ),
-            ),
-            'crud-page' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/page[/:action][/:name]',
-                    'defaults' => array(
-                        'controller' => 'AlphaPage\Controller\Page',
-                    ),
-                ),
-            ),
         ),
     ),
     'view_manager' => array(
