@@ -48,6 +48,9 @@ class PageController extends AbstractActionController {
     }
 
     public function previewAction() {
+
+        $name = $this->params('name');
+
         $request = $this->getRequest();
         $data = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
         $page = $this->pageService->updatePage(\AlphaPage\Entity\Page::PREVIEW_PAGE_ID, $data);
@@ -55,6 +58,7 @@ class PageController extends AbstractActionController {
         $view->setVariable('page', $page);
         $view->setVariable('services', $this->services);
         $view->setTemplate('alpha-page/page/view.phtml');
+        $view->setVariable('preview', true);
         return $view;
     }
 

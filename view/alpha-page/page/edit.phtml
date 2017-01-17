@@ -20,12 +20,15 @@ $form->setAttributes(array(
 
                 <?php echo $this->form()->openTag($form); ?>
                 <div class="form-group has-feedback">
-                    <label style="font-weight: 400;">Page HTML</label>
+                    <label style="font-weight: 400;">
+                        Page HTML <em>(Press F11 when the cursor is in editor to toggle full screen)</em>
+                    </label>
                     <?php echo $this->formTextarea($form->get('content')) . $this->formElementErrors($form->get('content')); ?>
                 </div>
                 <button class="btn btn-group btn-default btn-animated" type="submit" onclick="formPreview(this.form)">Preview<i class="fa fa-eye"></i></button>
                 <button class="btn btn-group btn-default btn-animated" type="submit" onclick="formSubmit(this.form)">Submit<i class="fa fa-check-circle"></i></button>                        
-                    <?php echo $this->form()->closeTag(); ?>
+                <a class="btn btn-default pull-right" onclick="formatCodeMirror()">Format Code</a>
+                <?php echo $this->form()->closeTag(); ?>
 
             </div>
         </div>
