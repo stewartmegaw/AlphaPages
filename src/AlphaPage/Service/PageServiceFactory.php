@@ -13,8 +13,9 @@ class PageServiceFactory implements FactoryInterface {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $config = $serviceLocator->get('config');
         $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        $userService = $serviceLocator->get('AlphaUserBase\Service\User');
 
-        return new PageService($config, $entityManager);
+        return new PageService($config, $entityManager, $userService);
     }
 
 }

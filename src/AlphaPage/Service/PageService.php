@@ -3,6 +3,7 @@
 namespace AlphaPage\Service;
 
 use Doctrine\ORM\EntityManager;
+use AlphaUserBase\Service\UserService;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
@@ -11,9 +12,11 @@ class PageService {
 
     private $config;
     private $entityManager;
+    private $userService;
 
-    public function __construct($config, EntityManager $entityManager) {
+    public function __construct($config, EntityManager $entityManager, UserService $userService) {
         $this->config = $config;
+        $this->userService = $userService;
         $this->entityManager = $entityManager;
     }
 
