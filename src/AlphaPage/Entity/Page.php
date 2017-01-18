@@ -35,7 +35,7 @@ class Page {
     /** @ORM\Column(type="datetime", name="last_modified", nullable=true) */
     protected $lastModified;
 
-    /** @ORM\ManyToOne(targetEntity="\AlphaUserSubscription\Entity\User") */
+    /** @ORM\ManyToOne(targetEntity="\AlphaUserBase\Entity\AlphaUserBase") */
     protected $editor;
 
     /** @ORM\OneToMany(targetEntity="PageDependency", mappedBy="page") */
