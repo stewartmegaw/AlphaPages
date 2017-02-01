@@ -73,6 +73,8 @@ class PageController extends AbstractActionController {
         //SET CONTENT AND SERVICE
         $viewModel->setVariable('page', $this->page);
         $viewModel->setVariable('services', $this->services);
+        $this->layout()->setVariable('page', $this->page);
+        $this->layout()->setVariable('services', $this->services);
 
         return $viewModel;
     }
