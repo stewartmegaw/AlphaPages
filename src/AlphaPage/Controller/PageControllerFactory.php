@@ -44,8 +44,8 @@ class PageControllerFactory implements FactoryInterface {
                 break;
 
             default:
-                $route = $entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => null]);
-                $page = $entityManager->getRepository('AlphaPage\Entity\Page')->findOneBy(['route' => $route]);
+                $route = $entityManager->getRepository('\Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => null]);
+                $page = $route->getPage();
                 $dependencies = $page->getDependencies();
 
                 foreach ($dependencies as $dependency) {

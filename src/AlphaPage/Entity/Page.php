@@ -44,22 +44,8 @@ class Page {
     /** @ORM\Column(type="string", nullable=true) */
     protected $layout;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Alpha\Entity\AlphaRoute")
-     * @ORM\JoinColumn(name="route_id", referencedColumnName="id")
-     */
-    protected $route;
-
     public function __construct() {
         $this->dependencies = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    public function getRoute() {
-        return $this->route;
-    }
-
-    public function setRoute($route) {
-        $this->route = $route;
     }
 
     function getId() {
