@@ -81,7 +81,7 @@ class PageService {
         if (!empty($page)) {
             $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
             if (!empty($route)) {
-                $this->entityManager->remove($route);
+                $route->setPage(NULL);
                 $this->entityManager->flush();
             }
             $this->entityManager->remove($page);
