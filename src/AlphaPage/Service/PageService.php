@@ -30,13 +30,15 @@ class PageService {
         return $this->entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
     }
 
-    public function updatePage($id, $routeName, $content, $routeGuardRoleId, $user = null) {
+    public function updatePage($id, $routeName, $content, $routeGuardRoleId, $user = null, $pageManagerRoleId) {
 
         $now = date_create(date('Y-m-d H:i:s'));
         $page = $this->entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
+        $page->setName($routeName);
         $page->setContent($content);
         $page->setLastModified($now);
         $page->setEditor($user);
+        $page->setPageManagerRole($pageManagerRoleId);
 
         $routes = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findBy(['page' => $page]);
         foreach ($routes as $route) {
@@ -49,7 +51,7 @@ class PageService {
         return $page;
     }
 
-    public function createPage($routeName, $content, $routeGuardRole, $user) {
+    public function createPage($routeName, $content, $routeGuardRole, $user, $pageManagerRole) {
         $now = date_create(date('Y-m-d H:i:s'));
 
         $page = new Page();
@@ -58,6 +60,7 @@ class PageService {
         $page->setContent($content);
         $page->setLastModified($now);
         $page->setLayout(NULL);
+        $page->setPageManagerRole($pageManagerRole);
         $this->entityManager->persist($page);
 
         $route = new AlphaRoute();
@@ -80,7 +83,18 @@ class PageService {
 
         if (!empty($page)) {
             $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
+            //if page is associated to route, remove all route guard roles and set page as null
             if (!empty($route)) {
+                if (!empty($route->getRouteGuardRoles())) {
+                    foreach ($route->getRouteGuardRoles() as $role) {
+                        $sql = "DELETE from alpha_routes_guards "
+                                . "WHERE route_id={$route->getId()} "
+                                . "AND role_id={$role->getId()}";
+
+                        $direct_db_connection = $this->entityManager->getConnection();
+                        $direct_db_connection->executeUpdate($sql);
+                    }
+                }
                 $route->setPage(NULL);
                 $this->entityManager->flush();
             }

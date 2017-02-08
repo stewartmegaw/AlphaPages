@@ -9,12 +9,13 @@
 namespace AlphaPage\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="pages") 
  */
-class Page {
+class Page implements ResourceInterface {
 
     const PREVIEW_PAGE_ID = -1;
 
@@ -44,8 +45,23 @@ class Page {
     /** @ORM\Column(type="string", nullable=true) */
     protected $layout;
 
+    /** @ORM\Column(type="integer") */
+    protected $pageManagerRole;
+
     public function __construct() {
         $this->dependencies = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getResourceId() {
+        return 'Page';
+    }
+
+    function setPageManagerRole($pageManagerRole) {
+        $this->pageManagerRole = $pageManagerRole;
+    }
+
+    function getPageManagerRole() {
+        return $this->pageManagerRole;
     }
 
     function getId() {

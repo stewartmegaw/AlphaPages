@@ -18,6 +18,9 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
+            //ASSERTIONS
+            'assertion.AlphaPageManager' => 'AlphaPage\Assertion\AlphaPageManagerAssertionFactory',
+            //OTHERS
             'AlphaPage\Service\Page' => 'AlphaPage\Service\PageServiceFactory',
         ),
     ),
@@ -56,6 +59,20 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+    ),
+    'bjyauthorize' => array(
+        'resource_providers' => array(
+            'BjyAuthorize\Provider\Resource\Config' => array(
+                'Page' => array(),
+            ),
+        ),
+        'rule_providers' => array(
+            'BjyAuthorize\Provider\Rule\Config' => array(
+                'allow' => array(
+                    //array(array('admin', 'alpha'), 'Page', array('edit'), 'assertion.AlphaPageManager'),
+                ),
+            ),
         ),
     ),
 );
