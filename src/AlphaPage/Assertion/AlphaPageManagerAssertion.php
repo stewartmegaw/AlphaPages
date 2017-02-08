@@ -14,18 +14,23 @@ use AlphaPage\Entity\Page;
  */
 class AlphaPageManagerAssertion implements AssertionInterface {
 
-    protected $authentication;
-    protected $entityManager;
+    protected $user;
+    protected $userRoleId;
 
-    public function __construct($authentication, EntityManager $entityManager) {
-        $this->authentication = $authentication;
-        $this->entityManager = $entityManager;
+    public function __construct($user, $userRoleId) {
+        $this->user = $user;
+        $this->userRoleId = $userRoleId;
     }
 
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null) {
 
         if ($resource instanceof Page) {
-            return false;
+
+            if (empty($resource->getPageManagerRole()))
+                return false;
+
+            if ($this->userRoleId >= $resource->getPageManagerRole())
+                return true;
         } else {
             return true;
         }

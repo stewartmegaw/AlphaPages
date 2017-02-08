@@ -42,12 +42,14 @@ return array(
         'resource_providers' => array(
             'BjyAuthorize\Provider\Resource\Config' => array(
                 'Collections' => array(),
+                'Page' => array(),
             ),
         ),
         'rule_providers' => array(
             'BjyAuthorize\Provider\Rule\Config' => array(
                 'allow' => array(
-                    array(array('alpha'), 'Collections', array('edit-view')),
+                    array(array('admin', 'alpha'), 'Collections', array('edit-view')),
+                    array(array('admin', 'alpha'), 'Page', array('edit'), 'assertion.AlphaPageManager'),
                 ),
             ),
         ),
@@ -59,20 +61,6 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
-        ),
-    ),
-    'bjyauthorize' => array(
-        'resource_providers' => array(
-            'BjyAuthorize\Provider\Resource\Config' => array(
-                'Page' => array(),
-            ),
-        ),
-        'rule_providers' => array(
-            'BjyAuthorize\Provider\Rule\Config' => array(
-                'allow' => array(
-                    //array(array('admin', 'alpha'), 'Page', array('edit'), 'assertion.AlphaPageManager'),
-                ),
-            ),
         ),
     ),
 );

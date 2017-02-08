@@ -13,8 +13,15 @@ class AlphaPageManagerAssertionFactory implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $authentication = $serviceLocator->get('zfcuser_auth_service');
-        $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
-        return new AlphaPageManagerAssertion($authentication, $entityManager);
+
+        $user = $authentication->getIdentity();
+
+        if (!empty($user))
+            $userRoleId = $user->getRoles()[0]->getId();
+        else
+            $userRoleId = null;
+        
+        return new AlphaPageManagerAssertion($user, $userRoleId);
     }
 
 }

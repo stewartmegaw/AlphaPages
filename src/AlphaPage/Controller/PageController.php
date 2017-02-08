@@ -28,8 +28,15 @@ class PageController extends AbstractActionController {
     }
 
     public function editAction() {
+
         $name = $this->params('name', null);
         $page = $this->pageService->getPageByName($name);
+
+        if (!$this->isAllowed($page, 'edit')) {
+            $this->flashMessenger()->addWarningMessage('You are not allowed to edit this page! Please contact you application administrator');
+            return $this->redirect()->toRoute('dashboard');
+        }
+
         $form = new PageForm();
         $form->bind($page);
 
