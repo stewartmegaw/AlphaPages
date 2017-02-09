@@ -42,8 +42,12 @@ class PageController extends AbstractActionController {
 
         if ($this->getRequest()->isPost()) {
             $user = $this->zfcUserAuthentication()->getIdentity();
+            $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
+
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
-            $this->pageService->updatePage($page->getId(), $data, $user);
+            $this->pageService->updatePage(
+                    $page->getId(), $page->getName(), $data['content'], $route->getRouteGuardRoles()[0]->getId(), $user, $page->getPageManagerRole()
+            );
             $this->flashMessenger()->addSuccessMessage('Page updated succesfully!');
             $this->redirect()->toRoute('dashboard');
         }
