@@ -13,7 +13,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="pages") 
+ * @ORM\Table(name="alpha_pages") 
  */
 class Page implements ResourceInterface {
 

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="page_dependencies") 
+ * @ORM\Table(name="alpha_page_dependencies") 
  */
 class PageDependency {
 
@@ -26,7 +26,7 @@ class PageDependency {
 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="dependencies")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="alpha_page_id", referencedColumnName="id")
      *
      */
     protected $page;
