@@ -1,0 +1,72 @@
+<?php
+$collections = $this->collections;
+?>
+<section class="main-container">
+    <div class="container">
+        <div class="row">
+
+            <?php echo $this->partial('partial/sidebar/admin-sidebar'); ?>
+
+            <div class="main col-md-9 col-md-offset-1">
+                <?php echo $this->partial('partial/flashmessanger/flash-messanger'); ?>
+                <h2 class="page-title">Page Collections</h2>
+                <p><i class="fa fa-info-circle"></i> Following page collections will be available for integration in your application</p>
+                <div class="separator-2"></div><br>
+
+                <?php if (count($collections) > 15): ?>
+                    <a href="#" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Create New Collection</a>
+                <?php endif ?>
+
+                <table class="table table-colored table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($collections as $collection): ?>
+                            <tr>
+                                <td><?php echo $collection->getId() ?></td>
+                                <td><?php echo $collection->getName() ?></td>
+                                <td>
+                                    <a href="<?php echo $this->url('alpha-page-collection-items', array('name' => $collection->getName(), 'action' => 'manage')) ?>">
+                                        View Collection Items
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $collection->getId(); ?>"><i class="fa fa-remove"></i></a>
+                                </td>
+                        <div class="modal fade" id="deleteModal<?php echo $collection->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Delete Collection</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure that you want to delete <strong><?php echo $collection->getName(); ?></strong>  collection ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
+                                        <a href="#"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </tr>
+                    <?php endforeach ?>
+                    </tbody>
+                </table>
+
+                <a href="#" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Create New Collection</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- sidebar end -->
+

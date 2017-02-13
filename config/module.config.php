@@ -15,6 +15,7 @@ return array(
         'factories' => array(
             'AlphaPage\Controller\Page' => 'AlphaPage\Controller\PageControllerFactory',
             'AlphaPage\Controller\PageCollection' => 'AlphaPage\Controller\PageCollectionControllerFactory',
+            'AlphaPage\Controller\PageCollectionItem' => 'AlphaPage\Controller\PageCollectionItemControllerFactory',
         ),
     ),
     'service_manager' => array(
@@ -58,6 +59,26 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'alpha-page-collections' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/collections[/:action][/:id]',
+                    'defaults' => array(
+                        'controller' => 'AlphaPage\Controller\PageCollection',
+                        'action' => 'manage'
+                    )
+                )
+            ),
+            'alpha-page-collection-items' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/collection[/:name]/items[/:action][/:id]',
+                    'defaults' => array(
+                        'controller' => 'AlphaPage\Controller\PageCollectionItem',
+                        'action' => 'manage'
+                    )
+                )
+            ),
         ),
     ),
     'view_manager' => array(

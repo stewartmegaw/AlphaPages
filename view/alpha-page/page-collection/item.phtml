@@ -6,7 +6,7 @@ $files = $article->getFiles();
 $urls = array();
 
 foreach ($files as $file) {
-    if ($file->getType() !== \AlphaPage\Entity\PageCollectionFiles::ARTICLE_THUMB) {
+    if ($file->getType() !== \AlphaPage\Entity\PageCollectionItemFiles::ARTICLE_THUMB) {
         array_push($urls, $file->getFile());
     }
 }
@@ -16,8 +16,8 @@ $i = 0;
 foreach ($recentArticles as $recentArticle) {
     $files = $recentArticle->getFiles();
     foreach ($files as $file) {
-        if ($file->getType() !== \AlphaPage\Entity\PageCollectionFiles::ARTICLE_THUMB) {
-            $recentUrls[$i]["id"] = $file->getPageCollection()->getId();
+        if ($file->getType() !== \AlphaPage\Entity\PageCollectionItemFiles::ARTICLE_THUMB) {
+            $recentUrls[$i]["id"] = $file->getPageCollectionItem()->getId();
             $recentUrls[$i]["file"] = $file->getFile();
             $i++;
         }

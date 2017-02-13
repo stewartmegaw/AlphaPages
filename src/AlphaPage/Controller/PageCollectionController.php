@@ -22,35 +22,53 @@ class PageCollectionController extends AbstractActionController {
         $this->pageCollectionName = $pageCollectionName;
     }
 
+    //Front end
     public function listAction() {
 
         if (empty($this->pageCollectionName))
             return $this->redirect()->toRoute('home');
 
-        $pageCollectionType = $this->pageCollectionService->getPageCollectionTypeByName($this->pageCollectionName);
-        $pageCollection = $this->pageCollectionService->getPageCollectionByType($pageCollectionType);
-        $pageCollectionCountsForYearsAndMonths = $this->pageCollectionService->getPageCollectionCountForYearsAndMonths($this->pageCollectionName);
+        $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
+        $pageCollectionCountsForYearsAndMonths = $this->pageCollectionService->getPageCollectionItemCountForYearsAndMonths($pageCollection);
 
         return new ViewModel([
             'pageCollection' => $pageCollection,
             'pageCollectionCount' => $pageCollectionCountsForYearsAndMonths,
-            'pageCollectionType' => $pageCollectionType,
         ]);
     }
 
     public function itemAction() {
 
         $id = $this->params('param1');
+
         if (empty($id))
             return $this->redirect()->toRoute('home');
 
         $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
-        $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItemsByType($pageCollectionItem->getCollectionType());
+        $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItems($pageCollectionItem);
 
         return new ViewModel([
             'pageCollectionItem' => $pageCollectionItem,
             'recentPageCollectionItems' => $recentPageCollectionItems
         ]);
+    }
+
+    //Backend Actions
+    public function manageAction() {
+        $collections = $this->pageCollectionService->getAllPageCollections();
+        return new ViewModel(['collections' => $collections]);
+    }
+
+    public function createAction() {
+        //TODO: Create a page collection item
+    }
+
+    public function updateAction() {
+        //TODO: Update a page collection item by id
+    }
+
+    public function deleteAction() {
+        //TODO: Delete a page collection item by id
     }
 
 }

@@ -17,11 +17,9 @@ class PageCollectionService {
         $this->entityManager = $entityManager;
     }
 
-    public function getPageCollectionTypeByName($name) {
-        $collectionType = $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionType')
-                ->findOneBy(['name' => $name]);
-
-        return $collectionType;
+    public function getPageCollectionByName($name) {
+        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollection')
+                        ->findOneBy(['name' => $name]);
     }
 
     public function getPageCollectionByType($collectionType) {
@@ -33,7 +31,7 @@ class PageCollectionService {
     }
 
     public function getPageCollectionItemById($id) {
-        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollection')->find($id);
+        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->find($id);
     }
 
     /**
@@ -41,33 +39,30 @@ class PageCollectionService {
      * @param Object $type AlphaPage\Entity\PageCollectionType
      * @return array Array of objects of AlphaPage\Entity\PageCollection
      */
-    public function getRecentPageCollectionItemsByType($type) {
+    public function getRecentPageCollectionItems($pageCollection) {
         $query = $this->entityManager->createQuery(
-                "SELECT n FROM \AlphaPage\Entity\PageCollection n "
-                . "WHERE n.collectionType = :type "
+                "SELECT n FROM \AlphaPage\Entity\PageCollectionItem n "
+                . "WHERE n.pageCollection = :pageCollection "
                 . "ORDER BY n.id DESC "
         );
 
-        $query->setParameter('type', $type);
+        $query->setParameter('pageCollection', $pageCollection);
 
         $pageCollectionItems = $query->setMaxResults(4)->getResult();
 
         return $pageCollectionItems;
     }
 
-    public function getPageCollectionCountForYearsAndMonths($name) {
-        $collectionTypeId = $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionType')
-                        ->findOneBy(['name' => $name])->getId();
+    public function getPageCollectionItemCountForYearsAndMonths($pageCollection) {
 
         $sql = " SELECT YEAR(DATE) as year, MONTH( DATE ) as month, COUNT( id ) as count
-                 FROM  `alpha_pages_collections`
-                 WHERE id <> '-1' AND `page_collection_type_id` = :type
+                 FROM  `alpha_pages_collection_items`
+                 WHERE id <> '-1' AND `page_collection_id` = :id
                  GROUP BY YEAR( DATE ) , MONTH( DATE ) 
                  ORDER BY DATE DESC";
 
         $prepartedStatement = $this->entityManager->getConnection()->prepare($sql);
-        $prepartedStatement->execute(['type' => $collectionTypeId]);
-
+        $prepartedStatement->execute(['id' => $pageCollection->getId()]);
         return $prepartedStatement->fetchAll();
     }
 
@@ -102,6 +97,23 @@ class PageCollectionService {
         $articles = $query->getResult();
 
         return $articles;
+    }
+
+    //Page Collections CRUD Stuff
+    public function getAllPageCollections() {
+        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollection')->findAll();
+    }
+
+    public function createPageCollection() {
+        
+    }
+
+    public function updatePageCollection() {
+        
+    }
+
+    public function deletePageCollection() {
+        
     }
 
 }

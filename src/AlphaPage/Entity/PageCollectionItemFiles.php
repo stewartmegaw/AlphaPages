@@ -7,9 +7,9 @@ use Alpha\Entity\AlphaEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="alpha_pages_collections_files") 
+ * @ORM\Table(name="alpha_page_collection_item_files") 
  */
-class PageCollectionFiles extends AlphaEntity {
+class PageCollectionItemFiles extends AlphaEntity {
 
     const ARTICLE_BANNER = 1;
     const ARTICLE_THUMB = 2;
@@ -23,11 +23,11 @@ class PageCollectionFiles extends AlphaEntity {
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PageCollection", inversedBy="files")
-     * @ORM\JoinColumn(name="page_collection_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="PageCollectionItem", inversedBy="files")
+     * @ORM\JoinColumn(name="page_collection_item_id", referencedColumnName="id")
      *
      */
-    protected $pageCollection;
+    protected $pageCollectionItem;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
