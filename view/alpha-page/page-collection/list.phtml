@@ -1,0 +1,104 @@
+<?php
+$articlesCount = $this->pageCollectionCount;
+$articles = $this->pageCollection;
+
+$urls = array();
+$i = 0;
+
+foreach ($articles as $article) {
+    $files = $article->getFiles();
+    foreach ($files as $file) {
+        if ($file->getType() === \MembersArea\Entity\NewsAndEventsFiles::ARTICLE_THUMB) {
+            $urls[$i]["id"] = $file->getPageCollection()->getId();
+            $urls[$i]["file"] = $file->getFile();
+            $i++;
+        }
+    }
+}
+//$articles = $this->articles;
+//$articleCounts = $this->articleCounts;
+?>
+
+<!-- main-container start -->
+<!-- ================ -->
+<section class="main-container">
+
+    <div class="container">
+        <div class="row">
+
+            <!-- main start -->
+            <!-- ================ -->
+            <div class="main col-md-8">
+
+                <!-- page-title start -->
+                <!-- ================ -->
+                <h1 class="page-title" style="margin-top: 40px;"><?php echo $this->pageCollectionType->getName() ?></h1>
+                <div class="separator-2"></div>
+                <!-- page-title end -->
+                <p class="lead" style="margin-bottom:60px"><?php echo $this->pageCollectionType->getDescription() ?></p>
+
+                <?php foreach ($articles as $article): ?>
+                    <?php if ($article->getId() !== -1): ?>
+                        <?php
+                        $file = null;
+
+                        for ($i = 0; $i < count($urls); $i++) {
+                            if ($urls[$i]["id"] === $article->getId()) {
+                                $file = $urls[$i]["file"];
+                            }
+                        }
+                        ?>
+
+                        <div class="image-box style-3-b">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="overlay-container">
+                                        <img src="<?php echo ($file === null || $file === "") ? '/images/news-and-events/noimage.jpg' : '/files/' . $file; ?>" alt="">
+                                        <!--div class="overlay-to-top">
+                                            <p class="small margin-clear"><em><?php //echo $article->getTitle();                                           ?></em></p>
+                                        </div-->
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-8 col-lg-9">
+                                    <div class="body">
+                                        <h3 class="title"><a href="<?php echo $this->url('news-and-events-article', ['param1' => $article->getId(), 'param2' => $this->clean_url_helper(strtolower($article->getTitle()))]); ?>"><?php echo $article->getTitle(); ?></a></h3>
+                                        <p class="small mb-10"><i class="icon-calendar"></i> <?php echo $article->getDate()->format('Y-m-d'); ?><i class="pl-10 icon-tag-1"></i> <?php
+                                            if ($article->getType() === 1) {
+                                                echo 'News';
+                                            } else {
+                                                echo 'Events';
+                                            }
+                                            ?></p>
+                                        <div class="separator-2"></div>
+                                        <p class="mb-10"><?php echo $article->getSmallDescription() ?></p>
+                                        <a href="<?php echo $this->url('news-and-events-article', ['param1' => $article->getId(), 'param2' => $this->clean_url_helper(strtolower($article->getTitle()))]); ?>" class="btn btn-default btn-sm btn-hvr hvr-shutter-out-horizontal margin-clear">Read More<i class="fa fa-arrow-right pl-10"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                <?php endforeach ?>
+            </div>
+            <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                <div class="sidebar">
+                    <div class="block clearfix">
+                        <h2 style="margin-top: 40px;">Archive</h2>
+                        <div class="separator-2"></div>
+                        <nav>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="<?php echo $this->url('news-and-events') ?>">All</a></li>
+                                <?php foreach ($articlesCount as $count): ?>
+                                    <li>
+                                        <a href="<?php echo $this->url('news-and-events', ['param1' => $count['year'], 'param2' => $count['month']]) ?>">
+                                            <?php echo $count["year"] . ' ' . date('F', mktime(0, 0, 0, $count["month"], 10)) . ' (' . $count["count"] . ')' ?>
+                                        </a>
+                                    </li> 
+                                <?php endforeach ?>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>

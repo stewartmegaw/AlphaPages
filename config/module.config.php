@@ -14,6 +14,7 @@ return array(
     'controllers' => array(
         'factories' => array(
             'AlphaPage\Controller\Page' => 'AlphaPage\Controller\PageControllerFactory',
+            'AlphaPage\Controller\PageCollection' => 'AlphaPage\Controller\PageCollectionControllerFactory',
         ),
     ),
     'service_manager' => array(
@@ -22,6 +23,7 @@ return array(
             'assertion.AlphaPageManager' => 'AlphaPage\Assertion\AlphaPageManagerAssertionFactory',
             //OTHERS
             'AlphaPage\Service\Page' => 'AlphaPage\Service\PageServiceFactory',
+            'AlphaPage\Service\PageCollection' => 'AlphaPage\Service\PageCollectionServiceFactory',
         ),
     ),
     'doctrine' => array(
