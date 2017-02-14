@@ -69,7 +69,9 @@ class PageCollectionService {
         return $prepartedStatement->fetchAll();
     }
 
-    public function filterPageCollectionByYearAndMonth($year, $month) {
+    public function filterPageCollectionByYearAndMonth($name, $year, $month) {
+
+        $collection = $this->getPageCollectionByName($name);
 
         $startDate = new \DateTime();
         $startDate->setDate($year, $month, '01');
@@ -84,10 +86,11 @@ class PageCollectionService {
 
         $query = $this->entityManager->createQuery(
                 "SELECT 
-                    n FROM \MembersArea\Entity\NewsAndEvents n
+                    n FROM \AlphaPage\Entity\PageCollectionItem n
                  WHERE 
                     n.date >= :startdate AND 
                     n.date <= :enddate   AND
+                    n.pageCollection = :collection AND 
                     n.id <> :previewid
                  ORDER BY
                     n.date ASC"
@@ -95,7 +98,8 @@ class PageCollectionService {
 
         $query->setParameter('startdate', $startDate);
         $query->setParameter('enddate', $endDate);
-        $query->setParameter('previewid', NewsAndEvents::PREVIEW_ARTICLE_ID);
+        $query->setParameter('collection', $collection);
+        $query->setParameter('previewid', -1);
 
         $articles = $query->getResult();
 

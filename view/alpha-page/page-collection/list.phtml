@@ -1,6 +1,6 @@
 <?php
 $articlesCount = $this->pageCollectionCount;
-$articles = $this->pageCollection->getItems();
+$articles = $this->pageCollectionItems;
 
 $urls = array();
 $i = 0;
@@ -55,7 +55,7 @@ foreach ($articles as $article) {
                                     <div class="overlay-container">
                                         <img src="<?php echo ($file === null || $file === "") ? '/images/news-and-events/noimage.jpg' : '/files/' . $file; ?>" alt="">
                                         <!--div class="overlay-to-top">
-                                            <p class="small margin-clear"><em><?php //echo $article->getTitle();                                             ?></em></p>
+                                            <p class="small margin-clear"><em><?php //echo $article->getTitle();                                              ?></em></p>
                                         </div-->
                                     </div>
                                 </div>

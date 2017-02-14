@@ -30,11 +30,21 @@ class PageCollectionController extends AbstractActionController {
         if (empty($this->pageCollectionName))
             return $this->redirect()->toRoute('home');
 
-        $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
+        $year = $this->params('param1', null);
+        $month = $this->params('param2', null);
+
+        if (empty($year) && empty($month)) {
+            $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
+            $pageCollectionItems = $pageCollection->getItems();
+        } else {
+            $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
+            $pageCollectionItems = $this->pageCollectionService->filterPageCollectionByYearAndMonth($this->pageCollectionName, $year, $month);
+        }
         $pageCollectionCountsForYearsAndMonths = $this->pageCollectionService->getPageCollectionItemCountForYearsAndMonths($pageCollection);
 
         return new ViewModel([
             'pageCollection' => $pageCollection,
+            'pageCollectionItems' => $pageCollectionItems,
             'pageCollectionCount' => $pageCollectionCountsForYearsAndMonths,
         ]);
     }
