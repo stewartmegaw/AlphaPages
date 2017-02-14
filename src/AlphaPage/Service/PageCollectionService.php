@@ -59,7 +59,7 @@ class PageCollectionService {
     public function getPageCollectionItemCountForYearsAndMonths($pageCollection) {
 
         $sql = " SELECT YEAR(DATE) as year, MONTH( DATE ) as month, COUNT( id ) as count
-                 FROM  `alpha_pages_collection_items`
+                 FROM  `alpha_page_collection_items`
                  WHERE id <> '-1' AND `page_collection_id` = :id
                  GROUP BY YEAR( DATE ) , MONTH( DATE ) 
                  ORDER BY DATE DESC";
