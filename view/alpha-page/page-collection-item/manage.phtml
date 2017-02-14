@@ -15,7 +15,7 @@ $type = $this->pageCollection;
                 <div class="separator-2"></div><br>
 
                 <?php if (count($items) > 15): ?>
-                    <a href="#" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Add New Item</a>
+                    <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'create']) ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Add New Item</a>
                 <?php endif ?>
 
                 <table class="table table-colored table-hover">
@@ -34,7 +34,7 @@ $type = $this->pageCollection;
                                 <td><?php echo $item->getTitle() ?></td>
                                 <td><?php echo $item->getDateCreated()->format('F jS, Y') ?></td>
                                 <td>
-                                    <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+                                    <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'update', 'id' => $item->getId()]) ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
                                     <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $item->getId(); ?>"><i class="fa fa-remove"></i></a>
                                 </td>
                         <div class="modal fade" id="deleteModal<?php echo $item->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -49,7 +49,7 @@ $type = $this->pageCollection;
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
-                                        <a href="#"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
+                                        <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'delete', 'id' => $item->getId()]) ?>"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +59,8 @@ $type = $this->pageCollection;
                     </tbody>
                 </table>
 
-                <a href="#" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Add New Item</a>
+                <a href="<?php echo $this->url('alpha-page-collections') ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-left">Back</a>
+                <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'create']) ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Add New Item</a>
             </div>
         </div>
     </div>

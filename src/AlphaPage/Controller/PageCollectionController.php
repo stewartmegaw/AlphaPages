@@ -6,6 +6,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Doctrine\ORM\EntityManager;
 use AlphaPage\Service\PageCollectionService;
+use AlphaPage\Form\PageCollectionForm;
+use AlphaPage\Form\PageCollectionFormFilter;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
@@ -60,15 +62,73 @@ class PageCollectionController extends AbstractActionController {
     }
 
     public function createAction() {
-        //TODO: Create a page collection item
+        $form = new PageCollectionForm();
+        $filter = new PageCollectionFormFilter();
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost()->toArray();
+            $form->setData($data);
+            $form->setInputFilter($filter);
+
+            if ($form->isValid()) {
+                try {
+                    $this->pageCollectionService->createPageCollection($data);
+                    $this->flashMessenger()->addSuccessMessage('Collection Created Succesfully!');
+                    return $this->redirect()->toRoute('alpha-page-collections');
+                } catch (\Exception $ex) {
+                    $this->flashMessenger()->addWarningMessage('Failed to create collection');
+                    return $this->redirect()->toRoute('alpha-page-collections');
+                }
+                return $this->redirect()->toRoute('alpha-page-collections');
+            }
+        }
+
+        return new ViewModel(['form' => $form]);
     }
 
     public function updateAction() {
-        //TODO: Update a page collection item by id
+        $form = new PageCollectionForm();
+        $filter = new PageCollectionFormFilter();
+
+        $id = $this->params('id', null);
+        if (empty($id)) {
+            $this->flashMessenger()->addWarningMessage('Unable to edit collection! Contact Administrator');
+            return $this->redirect()->toRoute('alpha-page-collections');
+        }
+
+        $collection = $this->pageCollectionService->getPageCollectionById($id);
+        $form->bind($collection);
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost()->toArray();
+            try {
+                $this->pageCollectionService->updatePageCollection($id, $data);
+                $this->flashMessenger()->addSuccessMessage('Collection Updated Succesfully!');
+                return $this->redirect()->toRoute('alpha-page-collections');
+            } catch (\Exception $ex) {
+                $this->flashMessenger()->addWarningMessage('Failed to update collection..');
+                return $this->redirect()->toRoute('alpha-page-collections');
+            }
+        }
+
+        return new ViewModel(['form' => $form, 'collection' => $collection]);
     }
 
     public function deleteAction() {
-        //TODO: Delete a page collection item by id
+        $id = $this->params('id', null);
+        if (empty($id)) {
+            $this->flashMessenger()->addWarningMessage('Unable to delete collection');
+            return $this->redirect()->toRoute('alpha-page-collections');
+        }
+
+        try {
+            $this->pageCollectionService->deletePageCollection($id);
+            $this->flashMessenger()->addSuccessMessage('Collection deleted succesfully!');
+            return $this->redirect()->toRoute('alpha-page-collections');
+        } catch (\Exception $ex) {
+            $this->flashMessenger()->addWarningMessage('Unable to delete collection');
+            return $this->redirect()->toRoute('alpha-page-collections');
+        }
     }
 
 }

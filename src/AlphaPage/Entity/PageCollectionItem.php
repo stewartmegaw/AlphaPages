@@ -7,9 +7,12 @@ use Alpha\Entity\AlphaEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="alpha_pages_collection_items") 
+ * @ORM\Table(name="alpha_page_collection_items") 
  */
 class PageCollectionItem extends AlphaEntity {
+
+    const ITEM_BANNER = 1;
+    const ITEM_THUMB = 2;
 
     /**
      * @ORM\Id

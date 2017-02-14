@@ -14,7 +14,7 @@ $collections = $this->collections;
                 <div class="separator-2"></div><br>
 
                 <?php if (count($collections) > 15): ?>
-                    <a href="#" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Create New Collection</a>
+                    <a href="<?php echo $this->url('alpha-page-collections', ['action' => 'create']) ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Create New Collection</a>
                 <?php endif ?>
 
                 <table class="table table-colored table-hover">
@@ -32,12 +32,12 @@ $collections = $this->collections;
                                 <td><?php echo $collection->getId() ?></td>
                                 <td><?php echo $collection->getName() ?></td>
                                 <td>
-                                    <a href="<?php echo $this->url('alpha-page-collection-items', array('name' => $collection->getName(), 'action' => 'manage')) ?>">
+                                    <a href="<?php echo $this->url('alpha-page-collection-items', array('collectionId' => $collection->getId(), 'action' => 'manage')) ?>">
                                         View Collection Items
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0)"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+                                    <a href="<?php echo $this->url('alpha-page-collections', ['action' => 'update', 'id' => $collection->getId()]) ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
                                     <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $collection->getId(); ?>"><i class="fa fa-remove"></i></a>
                                 </td>
                         <div class="modal fade" id="deleteModal<?php echo $collection->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -48,11 +48,11 @@ $collections = $this->collections;
                                         <h4 class="modal-title" id="myModalLabel">Delete Collection</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure that you want to delete <strong><?php echo $collection->getName(); ?></strong>  collection ?</p>
+                                        <p>Are you sure that you want to delete <strong><?php echo $collection->getName(); ?></strong>  collection ? <br /><br /><em>All the collection items and files linked to this collection will also be deleted!</em></p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
-                                        <a href="#"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
+                                        <a href="<?php echo $this->url('alpha-page-collections', ['action' => 'delete', 'id' => $collection->getId()]) ?>"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@ $collections = $this->collections;
                     </tbody>
                 </table>
 
-                <a href="#" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Create New Collection</a>
+                <a href="<?php echo $this->url('alpha-page-collections', ['action' => 'create']) ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Create New Collection</a>
             </div>
         </div>
     </div>

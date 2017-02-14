@@ -62,7 +62,7 @@ return array(
             'alpha-page-collections' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/collections[/:action][/:id]',
+                    'route' => '/collection[/:action][/:id]',
                     'defaults' => array(
                         'controller' => 'AlphaPage\Controller\PageCollection',
                         'action' => 'manage'
@@ -72,7 +72,7 @@ return array(
             'alpha-page-collection-items' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/collection[/:name]/items[/:action][/:id]',
+                    'route' => '/collection[/:collectionId]/items[/:action][/:id]',
                     'defaults' => array(
                         'controller' => 'AlphaPage\Controller\PageCollectionItem',
                         'action' => 'manage'

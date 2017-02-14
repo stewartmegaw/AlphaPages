@@ -1,0 +1,77 @@
+<?php
+$form = $this->form;
+$form->prepare();
+$form->setAttributes(array(
+    'action' => '/collection/' . $this->collection->getId() . '/items/create',
+    'enctype' => 'multipart/form-data',
+));
+?>
+<section class="main-container">
+    <div class="container">
+        <div class="row">
+
+            <?php echo $this->partial('partial/sidebar/admin-sidebar'); ?>
+
+            <div class="main col-md-9 col-md-offset-1">
+                <h2 class="page-title">Add Collection Item</h2>
+                <div class="separator-2"></div>
+
+
+                <?php echo $this->form()->openTag($form) ?>
+                <div class="form-group has-feedback">
+                    <label for="title"><b>Title</b></label>
+                    <?php
+                    echo $this->formInput($form->get('title')) . $this->formElementErrors($form->get('title'));
+                    ?>
+                    <i class="fa fa-pencil form-control-feedback"></i>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="date"><b>Date</b></label>
+                    <?php
+                    echo $this->formDate($form->get('date')) . $this->formElementErrors($form->get('date'));
+                    ?>
+                    <i class="fa fa-calendar form-control-feedback"></i>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="title"><b>External Url (Optional)</b></label>
+                    <?php
+                    echo $this->formInput($form->get('externalUrl')) . $this->formElementErrors($form->get('externalUrl'));
+                    ?>
+                    <i class="fa fa-pencil form-control-feedback"></i>
+                </div>
+                <div class="form-group radio" style="margin-bottom:12px">
+                    <div><b>Content Type (I think we should have an option to CRUD Item types that can be used in all collection items, manageable by alpha / admin)</b></div>
+                    <?php
+                    echo $this->formRadio($form->get('type')) . $this->formElementErrors($form->get('type'));
+                    ?>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="file"><b>Small Description</b></label>
+                    <?php
+                    echo $this->formTextarea($form->get('smallDescription')) . $this->formElementErrors($form->get('smallDescription'));
+                    ?>
+                    <i class="fa fa-pencil form-control-feedback"></i>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="file"><b>Event Details</b></label>
+                    <?php
+                    echo $this->formTextarea($form->get('description')) . $this->formElementErrors($form->get('description'));
+                    ?>
+                    <i class="fa fa-pencil form-control-feedback"></i>
+                </div>
+                <div class="form-group">
+                    <p class="help-block"><b>Please select appropriate images for your collection item</b></p>
+                    <label for="file">(Mandatory)</label>
+                    <?php
+                    echo $this->formFile($form->get('file')) . $this->formElementErrors($form->get('file'));
+                    ?>
+                </div>
+
+                <button class="btn btn-group btn-default btn-animated" type="submit"><?php echo $this->translate('Create Item'); ?><i class="fa fa-plus-circle"></i></button>                        
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
