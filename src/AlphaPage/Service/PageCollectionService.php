@@ -69,9 +69,9 @@ class PageCollectionService {
         return $prepartedStatement->fetchAll();
     }
 
-    public function filterPageCollectionByYearAndMonth($name, $year, $month) {
+    public function filterPageCollectionByYearAndMonth($pageCollection, $year, $month) {
 
-        $collection = $this->getPageCollectionByName($name);
+        $collection = $pageCollection;
 
         $startDate = new \DateTime();
         $startDate->setDate($year, $month, '01');

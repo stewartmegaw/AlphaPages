@@ -17,8 +17,10 @@ class PageCollectionController extends AbstractActionController {
     private $entityManager;
     private $pageCollectionService;
     private $pageCollectionName;
+    private $router;
 
-    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $pageCollectionName) {
+    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName) {
+        $this->router = $router;
         $this->entityManager = $entityManager;
         $this->pageCollectionService = $pageCollectionService;
         $this->pageCollectionName = $pageCollectionName;
@@ -27,26 +29,41 @@ class PageCollectionController extends AbstractActionController {
     //Front end
     public function listAction() {
 
-        if (empty($this->pageCollectionName))
+        $request = $this->getRequest();
+        $routeName = $this->router->match($request)->getMatchedRouteName();
+
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+        $pageCollection = $route->getPageCollection();
+        $page = $route->getPage();
+
+        if (empty($pageCollection))
             return $this->redirect()->toRoute('home');
 
         $year = $this->params('param1', null);
         $month = $this->params('param2', null);
 
+        //List Route
         if (empty($year) && empty($month)) {
-            $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
             $pageCollectionItems = $pageCollection->getItems();
-        } else {
-            $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
-            $pageCollectionItems = $this->pageCollectionService->filterPageCollectionByYearAndMonth($this->pageCollectionName, $year, $month);
         }
+        //Filter Rotue
+        else if (is_numeric($year) && is_numeric($month)) {
+            $pageCollectionItems = $this->pageCollectionService->filterPageCollectionByYearAndMonth($pageCollection, $year, $month);
+        }
+        //View Route
+        else {
+            
+        }
+
         $pageCollectionCountsForYearsAndMonths = $this->pageCollectionService->getPageCollectionItemCountForYearsAndMonths($pageCollection);
 
-        return new ViewModel([
-            'pageCollection' => $pageCollection,
-            'pageCollectionItems' => $pageCollectionItems,
-            'pageCollectionCount' => $pageCollectionCountsForYearsAndMonths,
-        ]);
+        $view = new ViewModel();
+        $view->setTemplate('alpha-page/page/view.phtml');
+        $view->setVariable('page', $page);
+        $view->setVariable('pageCollection', $pageCollection);
+        $view->setVariable('pageCollectionItems', $pageCollectionItems);
+        $view->setVariable('pageCollectionCount', $pageCollectionCountsForYearsAndMonths);
+        return $view;
     }
 
     public function itemAction() {
@@ -56,13 +73,19 @@ class PageCollectionController extends AbstractActionController {
         if (empty($id))
             return $this->redirect()->toRoute('home');
 
-        $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
-        $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItems($pageCollectionItem);
+        $routeName = $this->router->match($this->getRequest())->getMatchedRouteName();
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+        $page = $route->getPage();
 
-        return new ViewModel([
-            'pageCollectionItem' => $pageCollectionItem,
-            'recentPageCollectionItems' => $recentPageCollectionItems
-        ]);
+        $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
+        $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItems($pageCollectionItem->getPageCollection());
+
+        $view = new ViewModel();
+        $view->setTemplate('alpha-page/page/view.phtml');
+        $view->setVariable('page', $page);
+        $view->setVariable('pageCollectionItem', $pageCollectionItem);
+        $view->setVariable('recentPageCollectionItems', $recentPageCollectionItems);
+        return $view;
     }
 
     //Backend Actions

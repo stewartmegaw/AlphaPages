@@ -28,16 +28,16 @@ $type = $this->pageCollection;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($items as $item): ?>
+                        <?php foreach ($items as $pageCollectionItem): ?>
                             <tr>
-                                <td><?php echo $item->getId() ?></td>
-                                <td><?php echo $item->getTitle() ?></td>
-                                <td><?php echo $item->getDateCreated()->format('F jS, Y') ?></td>
+                                <td><?php echo $pageCollectionItem->getId() ?></td>
+                                <td><?php echo $pageCollectionItem->getTitle() ?></td>
+                                <td><?php echo $pageCollectionItem->getDateCreated()->format('F jS, Y') ?></td>
                                 <td>
-                                    <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'update', 'id' => $item->getId()]) ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $item->getId(); ?>"><i class="fa fa-remove"></i></a>
+                                    <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'update', 'id' => $pageCollectionItem->getId()]) ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $pageCollectionItem->getId(); ?>"><i class="fa fa-remove"></i></a>
                                 </td>
-                        <div class="modal fade" id="deleteModal<?php echo $item->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="deleteModal<?php echo $pageCollectionItem->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -45,11 +45,11 @@ $type = $this->pageCollection;
                                         <h4 class="modal-title" id="myModalLabel">Delete Item</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure that you want to delete <strong><?php echo $item->getTitle(); ?></strong>  item from your collection ?</p>
+                                        <p>Are you sure that you want to delete <strong><?php echo $pageCollectionItem->getTitle(); ?></strong>  item from your collection ?</p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
-                                        <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'delete', 'id' => $item->getId()]) ?>"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
+                                        <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'delete', 'id' => $pageCollectionItem->getId()]) ?>"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
                                     </div>
                                 </div>
                             </div>

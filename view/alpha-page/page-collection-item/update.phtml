@@ -63,7 +63,7 @@ $form->setAttributes(array(
                     <p class="help-block"><b>Please select appropriate images for your collection item (New Image will override previous image)</b></p>
                     <label for="file">(Mandatory)</label>
                     <div style="margin-bottom: 5px;">
-                        <img style="height: 80px;" src='/files/<?php echo (count($item->getFiles()) > 0 ? $item->getFiles()[0]->getFile() : '' ) ?>'>
+                        <img style="height: 80px;" src='/files/<?php echo (count($pageCollectionItem->getFiles()) > 0 ? $pageCollectionItem->getFiles()[0]->getFile() : '' ) ?>'>
                     </div>
                     <?php
                     echo $this->formFile($form->get('file')->setAttribute('required', null)) . $this->formElementErrors($form->get('file'));

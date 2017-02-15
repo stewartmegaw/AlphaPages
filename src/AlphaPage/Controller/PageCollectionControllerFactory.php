@@ -23,7 +23,7 @@ class PageCollectionControllerFactory implements FactoryInterface {
         $routerMatch = $router->match($request);
         $pageCollectionName = $routerMatch->getMatchedRouteName();
 
-        return new PageCollectionController($entityManager, $pageCollectionService, $pageCollectionName);
+        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName);
     }
 
 }
