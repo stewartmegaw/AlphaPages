@@ -43,7 +43,7 @@ class PageService {
         $routes = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findBy(['page' => $page]);
         foreach ($routes as $route) {
             $route->setName($routeName);
-            $route->setRoute('/' . $routeName);
+            //$route->setRoute('/' . $routeName);
             $this->updatePageRouteGuardRole($route, $routeGuardRoleId);
         }
 

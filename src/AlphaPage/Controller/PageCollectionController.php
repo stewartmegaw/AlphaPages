@@ -32,27 +32,40 @@ class PageCollectionController extends AbstractActionController {
         $request = $this->getRequest();
         $routeName = $this->router->match($request)->getMatchedRouteName();
 
-        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
-        $pageCollection = $route->getPageCollection();
-        $page = $route->getPage();
+        //Check if route is a child route
+        $parentRoute = null;
+        if (strpos($routeName, '/') !== false) {
+            $parentRouteName = explode('/', $routeName)[0];
+            $routeName = explode('/', $routeName)[1];
+            $parentRoute = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+        }
 
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+
+        //if child route
+        //page collection and page will always be linked to parent route 
+        //child route will just be used for data manipulation
+        if (!empty($parentRoute)) {
+            $pageCollection = $parentRoute->getPageCollection();
+            $page = $parentRoute->getPage();
+        } else {
+            $pageCollection = $route->getPageCollection();
+            $page = $route->getPage();
+        }
+
+        //If no collection is assoicated retun to home
         if (empty($pageCollection))
             return $this->redirect()->toRoute('home');
 
+        //get page collection items for listing
+        $pageCollectionItems = $pageCollection->getItems();
+
+        //check if filter params exist
+        //if does filter the items for listing according to filter
         $year = $this->params('param1', null);
         $month = $this->params('param2', null);
-
-        //List Route
-        if (empty($year) && empty($month)) {
-            $pageCollectionItems = $pageCollection->getItems();
-        }
-        //Filter Rotue
-        else if (is_numeric($year) && is_numeric($month)) {
+        if (!empty($year) && !empty($month)) {
             $pageCollectionItems = $this->pageCollectionService->filterPageCollectionByYearAndMonth($pageCollection, $year, $month);
-        }
-        //View Route
-        else {
-            
         }
 
         $pageCollectionCountsForYearsAndMonths = $this->pageCollectionService->getPageCollectionItemCountForYearsAndMonths($pageCollection);
@@ -74,7 +87,15 @@ class PageCollectionController extends AbstractActionController {
             return $this->redirect()->toRoute('home');
 
         $routeName = $this->router->match($this->getRequest())->getMatchedRouteName();
-        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+
+        $parentRoute = null;
+        if (strpos($routeName, '/') !== false) {
+            $parentRouteName = explode('/', $routeName)[0];
+            $routeName = explode('/', $routeName)[1];
+            $parentRoute = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+        }
+
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => $parentRoute]);
         $page = $route->getPage();
 
         $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
