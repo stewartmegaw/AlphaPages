@@ -1,0 +1,169 @@
+
+<?php
+$pageCollectionItem = $this->pageCollectionItem;
+$recentPageCollectionItems = $this->recentPageCollectionItems;
+
+$variables = array(
+    'date' => $pageCollectionItem->getDate()->format('F jS, Y'),
+    'url' => $pageCollectionItem->getExternalUrl(),
+);
+
+//SETTING UP META-TAGS FOR FACEBOOK
+$og_title = strtoupper($pageCollectionItem->getTitle());
+$og_description = 'Click here to read more about this article.';
+$og_image = $pageCollectionItem->getFiles()[0]->getFile();
+
+
+//SENDING META-TAGS TO LAYOUT
+$this->layout('layout/news-and-events-layout');
+$this->layout()->setVariable('og_title', $og_title);
+$this->layout()->setVariable('og_desc', $og_description);
+$this->layout()->setVariable('og_image', $og_image);
+?>
+<!-- banner start -->
+<!-- ================ -->
+<div class="pv-40 banner light-gray-bg">
+    <div class="container clearfix" >
+
+        <div id="carousel-blog-post" class="carousel slide shadow" data-ride="carousel" >
+            <!-- Indicators -->
+            <ol class="carousel-indicators bottom margin-clear">
+                <?php $files = $pageCollectionItem->getFiles() ?>
+                <?php
+                $images = array();
+                foreach ($files as $file) {
+                    if ($file->getType() === \AlphaFiles\Entity\AlphaFile::FILE_TYPE_IMAGE_FULL)
+                        $images[] = $file;
+                }
+                ?>
+
+
+                <?php
+                if (count($images) > 1) {
+                    for ($i = 0; $i < count($images); $i++) {
+                        if ($i === 0) {
+                            echo '<li data-target="#carousel-blog-post" data-slide-to="' . $i . '" class="active"></li>';
+                        } else {
+                            echo '<li data-target="#carousel-blog-post" data-slide-to="' . $i . '"></li>';
+                        }
+                    }
+                }
+                ?>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <?php
+                foreach ($images as $k => $file) {
+                    if ($k === 0) {
+                        echo
+                        '<div class="item active">
+                                <div class="overlay-container">
+                                    <img src="/files/' . $file->getFile() . '" alt="">
+                                </div>
+                            </div>';
+                    } else {
+                        echo
+                        '<div class="item">
+                                <div class="overlay-container">
+                                    <img src="/files/' . $file->getFile() . '" alt="">
+                                </div>
+                            </div>';
+                    }
+                }
+                ?>
+
+                <!-- carousel controls -->
+                <?php
+                if (count($images) > 1) {
+                    echo '
+                        <a class="carousel-control left" href="#carousel-blog-post" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="carousel-control right" href="#carousel-blog-post" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>';
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+
+    <!-- main-container start -->
+    <!-- ================ -->
+    <section class="main-container padding-ver-clear">
+        <div class="container pv-40">
+            <div class="row">
+
+                <!-- main start -->
+                <!-- ================ -->
+                <div class="main col-md-8">
+                    <h1 class="title"><?php echo $pageCollectionItem->getTitle(); ?></h1>
+                    <div class="separator-2"></div>
+                    <p><?php echo $pageCollectionItem->getDescription() ?></p>
+                </div>
+
+                <aside class="col-md-4 col-lg-3 col-lg-offset-1">
+                    <div class="sidebar">
+                        <div class="block clearfix">
+                            <h3 class="title">Info</h3>
+                            <div class="separator-2"></div>
+                            <ul class="list margin-clear">
+                                <!--<li><strong>Title: </strong> <span class="text-right">News 123</span></li>-->
+                                <li><strong>Date: </strong> <span class="text-right"><?php echo $pageCollectionItem->getDate()->format('F jS, Y'); ?></span></li>
+                                <!--<li><strong>Place: </strong> <span class="text-right">Europe</span></li>-->
+                                <li><strong>URL: </strong> <span class="text-right"><a href="http://<?php echo $pageCollectionItem->getExternalUrl(); ?>"><?php echo $pageCollectionItem->getExternalUrl(); ?></a></span></li>
+                            </ul>
+                            <h3>Share This</h3>
+                            <div class="separator-2"></div>
+                            <ul class="social-links colored circle small">
+                                <li class="facebook"><a target="_blank" onclick="fbShare()" href="javascript:void(0);"><i class="fa fa-facebook"></i></a></li>
+                                <li class="twitter"><a target="_blank" href="javascript:void(0)" onclick="return twShare('http://www.twitter.com/share')"><i class="fa fa-twitter"></i></a></li>
+                                <li class="googleplus"><a target="_blank" href="https://plus.google.com/share?url=<?php echo $this->serverUrl(true); ?>"><i class="fa fa-google-plus"></i></a></li>
+                            </ul>
+                            <a href="#" class="btn btn-default btn-alert btn-lg">Copy Link <i class="fa fa-clipboard"></i></a>
+                        </div>
+                    </div>
+                </aside>
+                <?php echo $this->partial('partial/sidebar/news-events.phtml', $variables); ?>
+            </div>
+        </div>
+    </section>
+    <!-- main-container end -->
+
+    <?php if (count($recentPageCollectionItems) > 1): ?>
+        <section class="section pv-40 clearfix">
+            <div class="container">
+                <h2>Recent Updates</h2>
+                <div class="separator-2"></div>
+                <div class="row grid-space-10">
+                    <?php foreach ($recentPageCollectionItems as $recentArticle): ?>
+                        <?php if ($recentArticle->getId() !== -1 && $recentArticle->getId() !== $pageCollectionItem->getId()): ?>
+                            <?php
+                            $fileUrl = "";
+                            foreach ($recentArticle->getFiles() as $file) {
+                                if ($file->getType() === \AlphaFiles\Entity\AlphaFile::FILE_TYPE_IMAGE_FULL)
+                                    $fileUrl = $file->getFile();
+                            }
+                            ?>
+                            <div class="col-sm-4">
+                                <div class="image-box style-2 mb-20 bordered text-center">
+                                    <div class="overlay-container">
+                                        <img class="zoom-image" src="<?php echo '/files/' . $fileUrl ?>" alt="">
+                                    </div>
+                                    <div class="body shadow light-gray-bg ">
+                                        <h3 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"><a href="<?php echo $this->url('news-and-events/news-and-events-article', ['param1' => $recentArticle->getId(), 'param2' => $this->clean_url_helper(strtolower($recentArticle->getTitle()))]); ?>"><?php echo $recentArticle->getTitle() ?></a></h3>
+                                        <div class="separator"></div>
+                                        <p style="text-align: left; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"><?php echo $recentArticle->getSmallDescription() ?></p>
+                                        <a href="<?php echo $this->url('news-and-events/news-and-events-article', ['param1' => $recentArticle->getId(), 'param2' => $this->clean_url_helper(strtolower($recentArticle->getTitle()))]); ?>" class="btn btn-default btn-sm btn-hvr hvr-shutter-out-horizontal margin-clear">Read More<i class="fa fa-arrow-right pl-10"></i></a>												
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        </section>
+    <?php endif ?>
+</div>
