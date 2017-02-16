@@ -12,7 +12,8 @@ use AlphaPage\Assertion\AlphaPageManagerAssertion;
 class AlphaPageManagerAssertionFactory implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $serviceLocator) {
-        $authentication = $serviceLocator->get('zfcuser_auth_service');
+
+        $authentication = $serviceLocator->get('AlphaUserBase\Service\Authentication');
 
         $user = $authentication->getIdentity();
 
