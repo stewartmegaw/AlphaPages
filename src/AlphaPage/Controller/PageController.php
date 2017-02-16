@@ -18,6 +18,7 @@ class PageController extends AbstractActionController {
     private $entityManager;
     private $services;
     private $page;
+    private $authentication;
 
     public function __construct($config, EntityManager $entityManager, PageService $pageService, $services, $page) {
         $this->config = $config;
@@ -25,6 +26,7 @@ class PageController extends AbstractActionController {
         $this->entityManager = $entityManager;
         $this->services = $services;
         $this->page = $page;
+        $this->authentication = $services['authentication'];
     }
 
     public function editAction() {
@@ -41,7 +43,7 @@ class PageController extends AbstractActionController {
         $form->bind($page);
 
         if ($this->getRequest()->isPost()) {
-            $user = $this->zfcUserAuthentication()->getIdentity();
+            $user = $this->authentication->getIdentity();
             $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
 
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());

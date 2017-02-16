@@ -24,6 +24,8 @@ class PageControllerFactory implements FactoryInterface {
         $pageService = $serviceLocator->getServiceLocator()->get('AlphaPage\Service\Page');
         $services['pageService'] = $pageService;
 
+        $auth = $serviceLocator->getServiceLocator()->get('AlphaUserBase\Service\Authentication');
+        $services['authentication'] = $auth;
 
         $router = $serviceLocator->getServiceLocator()->get('router');
         $services['router'] = $router;
