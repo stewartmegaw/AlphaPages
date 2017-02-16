@@ -5,7 +5,7 @@ namespace AlphaPage\Service;
 use Doctrine\ORM\EntityManager;
 use AlphaPage\Entity\PageCollection;
 use AlphaPage\Entity\PageCollectionItem;
-use AlphaPage\Entity\PageCollectionItemFiles;
+use AlphaFiles\Service\AlphaFileService;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
@@ -14,10 +14,12 @@ class PageCollectionService {
 
     private $config;
     private $entityManager;
+    private $alphaFileService;
 
-    public function __construct($config, EntityManager $entityManager) {
+    public function __construct($config, EntityManager $entityManager, AlphaFileService $alphaFileService) {
         $this->config = $config;
         $this->entityManager = $entityManager;
+        $this->alphaFileService = $alphaFileService;
     }
 
     public function getPageCollectionByName($name) {
@@ -69,9 +71,9 @@ class PageCollectionService {
         return $prepartedStatement->fetchAll();
     }
 
-    public function filterPageCollectionByYearAndMonth($name, $year, $month) {
+    public function filterPageCollectionByYearAndMonth($pageCollection, $year, $month) {
 
-        $collection = $this->getPageCollectionByName($name);
+        $collection = $pageCollection;
 
         $startDate = new \DateTime();
         $startDate->setDate($year, $month, '01');
@@ -171,17 +173,8 @@ class PageCollectionService {
         $item->setDateCreated($now);
         $item->setPageCollection($collection);
 
-        //UPLOADING BANNER FILES
-        $thumb_file_id = $this->upload_file($item, $data["file"]);
+        $this->alphaFileService->addImageFile($item, $data['file']);
 
-        //CREATING AND UPLOADING THUMBNAIL FROM FIRST BANNER FILE
-        if ($thumb_file_id !== null) {
-            $thumb_basename = basename($data["file"]["name"]);
-            $thumb_path = "data/uploads_tmp/" . $thumb_basename;
-            if ($this->createThumbnail("data/uploads/" . $thumb_file_id, $thumb_path, 240, 180)) {
-                $this->upload_thumbnail($item, $thumb_basename, $thumb_path);
-            }
-        }
         $this->entityManager->persist($item);
         $this->entityManager->flush();
     }
@@ -214,17 +207,7 @@ class PageCollectionService {
 
                 $this->entityManager->remove($file);
             }
-            //UPLOADING BANNER FILES
-            $thumb_file_id = $this->upload_file($item, $data["file"]);
-
-            //CREATING AND UPLOADING THUMBNAIL FROM FIRST BANNER FILE
-            if ($thumb_file_id !== null) {
-                $thumb_basename = basename($data["file"]["name"]);
-                $thumb_path = "data/uploads_tmp/" . $thumb_basename;
-                if ($this->createThumbnail("data/uploads/" . $thumb_file_id, $thumb_path, 240, 180)) {
-                    $this->upload_thumbnail($item, $thumb_basename, $thumb_path);
-                }
-            }
+            $this->alphaFileService->addImageFile($item, $data['file']);
         }
 
         $this->entityManager->flush();
@@ -242,92 +225,14 @@ class PageCollectionService {
             if ($uploads->has($file->getFile()))
                 $uploads->delete($file->getFile());
 
+            $item->deleteFile($file);
             $this->entityManager->remove($file);
+            $this->entityManager->flush();
         }
+
 
         $this->entityManager->remove($item);
         $this->entityManager->flush();
-    }
-
-    private function createThumbnail($filepath, $thumbpath, $thumbnail_width, $thumbnail_height, $background = false) {
-        list($original_width, $original_height, $original_type) = getimagesize($filepath);
-
-        /* if ($original_width > $original_height) {
-          $new_width = $thumbnail_width;
-          $new_height = intval($original_height * $new_width / $original_width);
-          } else {
-          $new_height = $thumbnail_height;
-          $new_width = intval($original_width * $new_height / $original_height);
-          } */
-
-        $desired_height = floor($original_height * ($thumbnail_width / $original_width));
-
-
-        //$dest_x = intval(($thumbnail_width - $new_width) / 2);
-        //$dest_y = intval(($thumbnail_height - $new_height) / 2);
-        if ($original_type === 1) {
-            $imgt = "ImageGIF";
-            $imgcreatefrom = "ImageCreateFromGIF";
-        } else if ($original_type === 2) {
-            $imgt = "ImageJPEG";
-            $imgcreatefrom = "ImageCreateFromJPEG";
-        } else if ($original_type === 3) {
-            $imgt = "ImagePNG";
-            $imgcreatefrom = "ImageCreateFromPNG";
-        } else {
-            return false;
-        }
-        $old_image = $imgcreatefrom($filepath);
-        $new_image = imagecreatetruecolor($thumbnail_width, $desired_height); // creates new image, but with a black background
-        // figuring out the color for the background
-        if (is_array($background) && count($background) === 3) {
-            list($red, $green, $blue) = $background;
-            $color = imagecolorallocate($new_image, $red, $green, $blue);
-            imagefill($new_image, 0, 0, $color);
-            // apply transparent background only if is a png image
-        } else if ($background === 'transparent' && $original_type === 3) {
-            imagesavealpha($new_image, TRUE);
-            $color = imagecolorallocatealpha($new_image, 0, 0, 0, 127);
-            imagefill($new_image, 0, 0, $color);
-        }
-        imagecopyresampled($new_image, $old_image, 0, 0, 0, 0, $thumbnail_width, $desired_height, $original_width, $original_height);
-        $imgt($new_image, $thumbpath);
-        return file_exists($thumbpath);
-    }
-
-    private function upload_thumbnail($item, $thumb_basename, $thumb_path) {
-        $adapter = new \RdnUpload\Adapter\Local('data/uploads', '/files');
-        $uploads = new \RdnUpload\Container($adapter);
-
-        $input = new \RdnUpload\File\File($thumb_basename, $thumb_path);
-        $image_id = $uploads->upload($input);
-
-        $itemFile = new PageCollectionItemFiles();
-        $itemFile->setFile($image_id);
-        $itemFile->setPageCollectionItem($item);
-        $itemFile->setType(PageCollectionItem::ITEM_THUMB);
-        $this->entityManager->persist($itemFile);
-    }
-
-    private function upload_file($item, $file) {
-        $adapter = new \RdnUpload\Adapter\Local('data/uploads', '/files');
-        $uploads = new \RdnUpload\Container($adapter);
-
-        $thumb_id = null;
-        //Uploading Images One by One
-        if ($file["size"] > 0) {
-            $input = new \RdnUpload\File\Input($file);
-            $image_id = $uploads->upload($input);
-            $thumb_id = $image_id;
-
-            $itemFile = new PageCollectionItemFiles();
-            $itemFile->setFile($image_id);
-            $itemFile->setPageCollectionItem($item);
-            $itemFile->setType(PageCollectionItem::ITEM_BANNER);
-            $this->entityManager->persist($itemFile);
-        }
-
-        return $thumb_id;
     }
 
     private function nl2br2($string) {

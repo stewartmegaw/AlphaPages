@@ -13,8 +13,9 @@ class PageCollectionServiceFactory implements FactoryInterface {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $config = $serviceLocator->get('config');
         $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
+        $alphaFileService = $serviceLocator->get('AlphaFiles\Service\AlphaFile');
 
-        return new PageCollectionService($config, $entityManager);
+        return new PageCollectionService($config, $entityManager, $alphaFileService);
     }
 
 }

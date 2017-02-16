@@ -17,8 +17,10 @@ class PageCollectionController extends AbstractActionController {
     private $entityManager;
     private $pageCollectionService;
     private $pageCollectionName;
+    private $router;
 
-    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $pageCollectionName) {
+    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName) {
+        $this->router = $router;
         $this->entityManager = $entityManager;
         $this->pageCollectionService = $pageCollectionService;
         $this->pageCollectionName = $pageCollectionName;
@@ -27,26 +29,54 @@ class PageCollectionController extends AbstractActionController {
     //Front end
     public function listAction() {
 
-        if (empty($this->pageCollectionName))
+        $request = $this->getRequest();
+        $routeName = $this->router->match($request)->getMatchedRouteName();
+
+        //Check if route is a child route
+        $parentRoute = null;
+        if (strpos($routeName, '/') !== false) {
+            $parentRouteName = explode('/', $routeName)[0];
+            $routeName = explode('/', $routeName)[1];
+            $parentRoute = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+        }
+
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+
+        //if child route
+        //page collection and page will always be linked to parent route 
+        //child route will just be used for data manipulation
+        if (!empty($parentRoute)) {
+            $pageCollection = $parentRoute->getPageCollection();
+            $page = $parentRoute->getPage();
+        } else {
+            $pageCollection = $route->getPageCollection();
+            $page = $route->getPage();
+        }
+
+        //If no collection is assoicated retun to home
+        if (empty($pageCollection))
             return $this->redirect()->toRoute('home');
 
+        //get page collection items for listing
+        $pageCollectionItems = $pageCollection->getItems();
+
+        //check if filter params exist
+        //if does filter the items for listing according to filter
         $year = $this->params('param1', null);
         $month = $this->params('param2', null);
-
-        if (empty($year) && empty($month)) {
-            $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
-            $pageCollectionItems = $pageCollection->getItems();
-        } else {
-            $pageCollection = $this->pageCollectionService->getPageCollectionByName($this->pageCollectionName);
-            $pageCollectionItems = $this->pageCollectionService->filterPageCollectionByYearAndMonth($this->pageCollectionName, $year, $month);
+        if (!empty($year) && !empty($month)) {
+            $pageCollectionItems = $this->pageCollectionService->filterPageCollectionByYearAndMonth($pageCollection, $year, $month);
         }
+
         $pageCollectionCountsForYearsAndMonths = $this->pageCollectionService->getPageCollectionItemCountForYearsAndMonths($pageCollection);
 
-        return new ViewModel([
-            'pageCollection' => $pageCollection,
-            'pageCollectionItems' => $pageCollectionItems,
-            'pageCollectionCount' => $pageCollectionCountsForYearsAndMonths,
-        ]);
+        $view = new ViewModel();
+        $view->setTemplate('alpha-page/page/view.phtml');
+        $view->setVariable('page', $page);
+        $view->setVariable('pageCollection', $pageCollection);
+        $view->setVariable('pageCollectionItems', $pageCollectionItems);
+        $view->setVariable('pageCollectionCount', $pageCollectionCountsForYearsAndMonths);
+        return $view;
     }
 
     public function itemAction() {
@@ -56,13 +86,27 @@ class PageCollectionController extends AbstractActionController {
         if (empty($id))
             return $this->redirect()->toRoute('home');
 
-        $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
-        $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItems($pageCollectionItem);
+        $routeName = $this->router->match($this->getRequest())->getMatchedRouteName();
 
-        return new ViewModel([
-            'pageCollectionItem' => $pageCollectionItem,
-            'recentPageCollectionItems' => $recentPageCollectionItems
-        ]);
+        $parentRoute = null;
+        if (strpos($routeName, '/') !== false) {
+            $parentRouteName = explode('/', $routeName)[0];
+            $routeName = explode('/', $routeName)[1];
+            $parentRoute = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+        }
+
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => $parentRoute]);
+        $page = $route->getPage();
+
+        $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
+        $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItems($pageCollectionItem->getPageCollection());
+
+        $view = new ViewModel();
+        $view->setTemplate('alpha-page/page/view.phtml');
+        $view->setVariable('page', $page);
+        $view->setVariable('pageCollectionItem', $pageCollectionItem);
+        $view->setVariable('recentPageCollectionItems', $recentPageCollectionItems);
+        return $view;
     }
 
     //Backend Actions

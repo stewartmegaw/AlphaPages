@@ -2,8 +2,9 @@
 
 namespace AlphaPage\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Alpha\Entity\AlphaEntity;
+use Doctrine\ORM\Mapping as ORM;
+use AlphaFiles\Entity\AlphaFileInterface;
 
 /**
  * @ORM\Entity
@@ -48,14 +49,20 @@ class PageCollectionItem extends AlphaEntity {
     /** @ORM\Column(type="string", name="external_url") */
     protected $externalUrl;
 
-    /** @ORM\OneToMany(targetEntity="PageCollectionItemFiles", mappedBy="pageCollectionItem") */
-    protected $files;
-
     /**
      * @ORM\ManyToOne(targetEntity="PageCollection", inversedBy="items")
      * @ORM\JoinColumn(name="page_collection_id", referencedColumnName="id")
      */
     protected $pageCollection;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AlphaFiles\Entity\AlphaFile")
+     * @ORM\JoinTable(name="alpha_page_collection_item_files",
+     *      joinColumns={@ORM\JoinColumn(name="alpha_page_collection_item_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="alpha_file_id", referencedColumnName="id", unique=true)}
+     *      )
+     */
+    protected $files;
 
     public function __construct() {
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();

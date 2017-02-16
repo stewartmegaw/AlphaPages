@@ -6,8 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Alpha\Entity\AlphaEntity;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="alpha_page_collection_item_files") 
+ * ORM\Entity
+ * ORM\Table(name="alpha_page_collection_item_files") 
  */
 class PageCollectionItemFiles extends AlphaEntity {
 
