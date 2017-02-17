@@ -29,37 +29,39 @@ $type = $this->pageCollection;
                     </thead>
                     <tbody>
                         <?php foreach ($items as $pageCollectionItem): ?>
-                            <tr>
-                                <td><?php echo $pageCollectionItem->getId() ?></td>
-                                <td><?php echo $pageCollectionItem->getTitle() ?></td>
-                                <td><?php echo $pageCollectionItem->getDateCreated()->format('F jS, Y') ?></td>
-                                <td>
-                                    <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'update', 'id' => $pageCollectionItem->getId()]) ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $pageCollectionItem->getId(); ?>"><i class="fa fa-remove"></i></a>
-                                </td>
-                        <div class="modal fade" id="deleteModal<?php echo $pageCollectionItem->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Delete Item</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure that you want to delete <strong><?php echo $pageCollectionItem->getTitle(); ?></strong>  item from your collection ?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
-                                        <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'delete', 'id' => $pageCollectionItem->getId()]) ?>"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
+                            <?php if ($pageCollectionItem->getId() !== AlphaPage\Entity\PageCollectionItem::PREVIEW_ID): ?>
+                                <tr>
+                                    <td><?php echo $pageCollectionItem->getId() ?></td>
+                                    <td><?php echo $pageCollectionItem->getTitle() ?></td>
+                                    <td><?php echo $pageCollectionItem->getDateCreated()->format('F jS, Y') ?></td>
+                                    <td>
+                                        <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'update', 'id' => $pageCollectionItem->getId()]) ?>"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal<?php echo $pageCollectionItem->getId(); ?>"><i class="fa fa-remove"></i></a>
+                                    </td>
+                            <div class="modal fade" id="deleteModal<?php echo $pageCollectionItem->getId(); ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Delete Item</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure that you want to delete <strong><?php echo $pageCollectionItem->getTitle(); ?></strong>  item from your collection ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">Close</button>
+                                            <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'delete', 'id' => $pageCollectionItem->getId()]) ?>"><button type="button" class="btn btn-sm btn-default">Delete</button></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        </tr>
+                            </tr>
+                        <?php endif ?>
                     <?php endforeach ?>
                     </tbody>
                 </table>
 
-                <a href="<?php echo $this->url('alpha-page-collections') ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-left">Back</a>
+                <a href="<?php //echo $this->url('alpha-page-collections') ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-left">Back</a>
                 <a href="<?php echo $this->url('alpha-page-collection-items', ['collectionId' => $type->getId(), 'action' => 'create']) ?>" class="btn btn-default-transparent btn-md btn-hvr hvr-sweep-to-right pull-right">Add New Item</a>
             </div>
         </div>

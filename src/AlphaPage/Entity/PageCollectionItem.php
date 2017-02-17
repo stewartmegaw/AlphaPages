@@ -12,6 +12,7 @@ use AlphaFiles\Entity\AlphaFileInterface;
  */
 class PageCollectionItem extends AlphaEntity {
 
+    const PREVIEW_ID = -1;
     const ITEM_BANNER = 1;
     const ITEM_THUMB = 2;
 

@@ -71,8 +71,8 @@ class PageCollectionItemForm extends Form {
             'options' => array(
                 'label' => 'Type',
                 'value_options' => array(
-                    '1' => 'Type 1',
-                    '2' => 'Type 2',
+                    '1' => 'News',
+                    '2' => 'Event',
                 ),
             ),
         ));
@@ -118,6 +118,48 @@ class PageCollectionItemForm extends Form {
             'type' => 'Zend\Form\Element\File',
             'attributes' => array(
                 'required' => 'required',
+                'accept' => 'image/jpg, image/png, image/jpeg'
+            ),
+            'options' => array(
+                'label' => 'Image',
+                'label_attributes' => array(
+                    'class' => 'label',
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'file2',
+            'type' => 'Zend\Form\Element\File',
+            'attributes' => array(
+                'accept' => 'image/jpg, image/png, image/jpeg'
+            ),
+            'options' => array(
+                'label' => 'Image',
+                'label_attributes' => array(
+                    'class' => 'label',
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'file3',
+            'type' => 'Zend\Form\Element\File',
+            'attributes' => array(
+                'accept' => 'image/jpg, image/png, image/jpeg'
+            ),
+            'options' => array(
+                'label' => 'Image',
+                'label_attributes' => array(
+                    'class' => 'label',
+                ),
+            ),
+        ));
+
+        $this->add(array(
+            'name' => 'file4',
+            'type' => 'Zend\Form\Element\File',
+            'attributes' => array(
                 'accept' => 'image/jpg, image/png, image/jpeg'
             ),
             'options' => array(

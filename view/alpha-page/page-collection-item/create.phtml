@@ -33,14 +33,14 @@ $form->setAttributes(array(
                     <i class="fa fa-calendar form-control-feedback"></i>
                 </div>
                 <div class="form-group has-feedback">
-                    <label for="title"><b>External Url (Optional)</b></label>
+                    <label for="title"><b>External Url</b></label>
                     <?php
                     echo $this->formInput($form->get('externalUrl')) . $this->formElementErrors($form->get('externalUrl'));
                     ?>
                     <i class="fa fa-pencil form-control-feedback"></i>
                 </div>
                 <div class="form-group radio" style="margin-bottom:12px">
-                    <div><b>Content Type (I think we should have an option to CRUD Item types that can be used in all collection items, manageable by alpha / admin)</b></div>
+                    <div><b>Type</b></div>
                     <?php
                     echo $this->formRadio($form->get('type')) . $this->formElementErrors($form->get('type'));
                     ?>
@@ -53,25 +53,63 @@ $form->setAttributes(array(
                     <i class="fa fa-pencil form-control-feedback"></i>
                 </div>
                 <div class="form-group has-feedback">
-                    <label for="file"><b>Event Details</b></label>
+                    <label for="file"><b>Details</b></label>
                     <?php
                     echo $this->formTextarea($form->get('description')) . $this->formElementErrors($form->get('description'));
                     ?>
                     <i class="fa fa-pencil form-control-feedback"></i>
                 </div>
                 <div class="form-group">
-                    <p class="help-block"><b>Please select appropriate images for your collection item</b></p>
+                    <p class="help-block"><b>Please select appropriate images for your item</b></p>
                     <label for="file">(Mandatory)</label>
                     <?php
                     echo $this->formFile($form->get('file')) . $this->formElementErrors($form->get('file'));
                     ?>
                 </div>
 
-                <button class="btn btn-group btn-default btn-animated" type="submit"><?php echo $this->translate('Create Item'); ?><i class="fa fa-plus-circle"></i></button>                        
+                <div class="form-group">
+                    <label for="file">(Optional)</label>
+                    <?php
+                    echo $this->formFile($form->get('file2')) . $this->formElementErrors($form->get('file'));
+                    ?>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">(Optional)</label>
+                    <?php
+                    echo $this->formFile($form->get('file3')) . $this->formElementErrors($form->get('file'));
+                    ?>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">(Optional)</label>
+                    <?php
+                    echo $this->formFile($form->get('file4')) . $this->formElementErrors($form->get('file'));
+                    ?>
+                </div>
+
+                <input value="Preview" class="btn btn-group btn-default"  type="submit" onclick="formPreview(this.form)">
+                <input class="btn btn-group btn-default"  type="submit" onclick="formSubmit(this.form)">                        
+                <?php echo $this->form()->closeTag() ?>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    function formPreview(form) {
+        console.log('HERE');
+        form.target = '_blank';
+        form.action = '<?php echo '/collection/' . $this->collection->getId() . '/items/preview' ?>';
+        //form.trigger('click');
+    }
+
+    function formSubmit(form) {
+        form.target = '_self';
+        form.action = '<?php echo '/collection/' . $this->collection->getId() . '/items/create' ?>';
+        //form.trigger('click');
+    }
+</script> 
 
 
 

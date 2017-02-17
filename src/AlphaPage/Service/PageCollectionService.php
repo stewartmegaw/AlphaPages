@@ -174,6 +174,10 @@ class PageCollectionService {
         $item->setPageCollection($collection);
 
         $this->alphaFileService->addImageFile($item, $data['file']);
+        $this->alphaFileService->addImageFile($item, $data['file2']);
+        $this->alphaFileService->addImageFile($item, $data['file3']);
+        $this->alphaFileService->addImageFile($item, $data['file4']);
+
 
         $this->entityManager->persist($item);
         $this->entityManager->flush();
@@ -199,7 +203,7 @@ class PageCollectionService {
         $item->setDescription($this->nl2br2($data["description"]));
         $item->setDateCreated($now);
 
-        if ($data['file']['size'] > 0) {
+        if ($data['file']['size'] > 0 || $data['file2']['size'] > 0 || $data['file3']['size'] > 0 || $data['file4']['size'] > 0) {
             $files = $item->getFiles();
             foreach ($files as $file) {
                 if ($uploads->has($file->getFile()))
@@ -208,6 +212,9 @@ class PageCollectionService {
                 $this->entityManager->remove($file);
             }
             $this->alphaFileService->addImageFile($item, $data['file']);
+            $this->alphaFileService->addImageFile($item, $data['file2']);
+            $this->alphaFileService->addImageFile($item, $data['file3']);
+            $this->alphaFileService->addImageFile($item, $data['file4']);
         }
 
         $this->entityManager->flush();

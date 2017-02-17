@@ -114,4 +114,10 @@ class PageCollectionItemController extends AbstractActionController {
         }
     }
 
+    public function previewAction() {
+        $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
+        $this->pageCollectionService->updatePageCollectionItem(\AlphaPage\Entity\PageCollectionItem::PREVIEW_ID, $data);
+        return $this->redirect()->toRoute('news-and-events/news-and-events-article', ['param1' => -1, 'param2' => 'preview']);
+    }
+
 }
