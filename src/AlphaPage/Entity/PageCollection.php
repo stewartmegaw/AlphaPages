@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PageCollection extends AlphaEntity {
 
+    const NESTED_TYPE_COLLECTION = 1;
+    const LIST_TYPE_COLLECTION = 2;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -27,6 +30,9 @@ class PageCollection extends AlphaEntity {
 
     /** @ORM\OneToMany(targetEntity="PageCollectionItem", mappedBy="pageCollection") */
     protected $items;
+
+    /** @ORM\Column(type="integer") */
+    protected $type;
 
     public function __construct() {
         $this->items = new \Doctrine\Common\Collections\ArrayCollection();

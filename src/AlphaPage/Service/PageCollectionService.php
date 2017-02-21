@@ -39,6 +39,15 @@ class PageCollectionService {
         return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->find($id);
     }
 
+    public function getPageCollectionItemByRouteLabel($collection, $routeLabel) {
+        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'routeLabel' => $routeLabel]);
+    }
+
+    public function getPageCollectionItemByParentItemTitleAndItemTitle($collection, $parentItemTitle, $title) {
+        $parentItem = $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'title' => $parentItemTitle]);
+        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'parentItem' => $parentItem, 'title' => $title]);
+    }
+
     /**
      * 
      * @param Object $type AlphaPage\Entity\PageCollectionType
@@ -117,6 +126,7 @@ class PageCollectionService {
         $collection = new PageCollection();
         $collection->setName($data['name']);
         $collection->setDescription($data['description']);
+        $collection->setType($data['type']);
         $this->entityManager->persist($collection);
         $this->entityManager->flush();
     }
@@ -125,6 +135,7 @@ class PageCollectionService {
         $collection = $this->getPageCollectionById($id);
         $collection->setName($data['name']);
         $collection->setDescription($data['description']);
+        $collection->setType($data['type']);
         $this->entityManager->flush();
     }
 
@@ -172,6 +183,8 @@ class PageCollectionService {
         $item->setDescription($this->nl2br2($data["description"]));
         $item->setDateCreated($now);
         $item->setPageCollection($collection);
+        $item->setParentItem(isset($data['parentItem']) ? $this->getPageCollectionItemById($data['parentItem']) : null);
+        $item->setRouteLabel(isset($data['routeLabel']) ? $data['routeLabel'] : NULL);
 
         $this->alphaFileService->addImageFile($item, $data['file']);
         $this->alphaFileService->addImageFile($item, $data['file2']);
@@ -202,6 +215,8 @@ class PageCollectionService {
         $item->setSmallDescription($data["smallDescription"]);
         $item->setDescription($this->nl2br2($data["description"]));
         $item->setDateCreated($now);
+        $item->setParentItem(!empty($data['parentItem']) ? $this->getPageCollectionItemById($data['parentItem']) : null);
+        $item->setRouteLabel(isset($data['routeLabel']) ? $data['routeLabel'] : NULL);
 
         if ($data['file']['size'] > 0 || $data['file2']['size'] > 0 || $data['file3']['size'] > 0 || $data['file4']['size'] > 0) {
             $files = $item->getFiles();

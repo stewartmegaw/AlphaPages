@@ -88,6 +88,25 @@ $form->setAttributes(array(
                     ?>
                 </div>
 
+                <hr style="margin-top: 50px;"/>
+                <div style="text-align: center;">
+                    <h4>Nest Collection Items Configuration</h4>
+                </div>
+                <?php if ($this->collection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION): ?>
+                    <div class="form-group">
+                        <label style="font-weight: 400;">Parent Item</label>
+                        <?php echo $this->formSelect($form->get('parentItem')->setAttributes(array('class' => 'form-control'))) . $this->formElementErrors($form->get('parentItem')); ?>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="routeLabel"><b>Route Label</b></label>
+                        <?php
+                        echo $this->formInput($form->get('routeLabel')) . $this->formElementErrors($form->get('routeLabel'));
+                        ?>
+                        <i class="fa fa-pencil form-control-feedback"></i>
+                    </div>
+                <?php endif ?>
+
                 <input value="Preview" class="btn btn-group btn-default"  type="submit" onclick="formPreview(this.form)">
                 <input class="btn btn-group btn-default"  type="submit" onclick="formSubmit(this.form)">                        
                 <?php echo $this->form()->closeTag() ?>

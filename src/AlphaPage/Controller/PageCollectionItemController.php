@@ -8,6 +8,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use AlphaPage\Service\PageCollectionService;
 use AlphaPage\Form\PageCollectionItemForm;
 use AlphaPage\Form\PageCollectionItemFormFilter;
+use DoctrineORMModule\Form\Element as DoctrineElement;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
@@ -35,14 +37,65 @@ class PageCollectionItemController extends AbstractActionController {
     }
 
     public function createAction() {
+
+        $collectionId = $this->params('collectionId');
+        if (empty($collectionId)) {
+            return $this->redirect()->toRoute('home');
+        }
+
+        $pageCollection = $this->pageCollectionService->getPageCollectionById($collectionId);
+
         $form = new PageCollectionItemForm();
         $filter = new PageCollectionItemFormFilter();
 
-        $collectionId = $this->params('collectionId');
-        if (empty($collectionId))
-            return $this->redirect()->toRoute('home');
+        if ($pageCollection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION) {
+            $e = new DoctrineElement\EntitySelect('parentItem');
+            $e->setAttributes(array('id' => 'parentItemId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
+            $options = array(
+                'property' => 'title',
+                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'empty_option' => "Don't have any parent item",
+                'use_hidden_element' => true,
+                'disable_inarray_validator' => true,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'matching',
+                    'params' => array(
+                        'criteria' => Criteria::create()->where(
+                                Criteria::expr()->eq('pageCollection', $pageCollection)
+                        ),
+                    ),
+                ),
+                'label_generator' => function($targetEntity) {
+            $parents = $targetEntity->getParentsRecursive();
+            $parents = array_reverse($parents);
+            $hierarchy = '';
+            foreach ($parents as $parent)
+                $hierarchy .= ' > ' . $parent->getTitle();
+            return (empty($hierarchy) ? '' : substr($hierarchy, 3) . ' > ') . $targetEntity->getTitle();
+        },
+            );
+            $e->setOptions($options);
+            $e->setLabel('Parent Item (if applicable)')->getProxy()->setObjectManager($this->entityManager);
+            $form->add($e);
 
-        $pageCollection = $this->pageCollectionService->getPageCollectionById($collectionId);
+            $form->add(array(
+                'name' => 'routeLabel',
+                'type' => 'text',
+                'attributes' => array(
+                    'required' => 'required',
+                    'placeholder' => 'Route Label',
+                    'class' => 'form-control',
+                ),
+                'options' => array(
+                    'label' => 'Route Label',
+                    'label_attributes' => array(
+                        'class' => 'label',
+                    ),
+                ),
+            ));
+        }
+
 
         if ($this->getRequest()->isPost()) {
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
@@ -75,6 +128,55 @@ class PageCollectionItemController extends AbstractActionController {
 
         $item = $this->pageCollectionService->getPageCollectionItemById($itemId);
         $collection = $this->pageCollectionService->getPageCollectionById($collectionId);
+
+        if ($collection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION) {
+            $e = new DoctrineElement\EntitySelect('parentItem');
+            $e->setAttributes(array('id' => 'parentItemId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
+            $options = array(
+                'property' => 'title',
+                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'empty_option' => "Don't have any parent item",
+                'use_hidden_element' => true,
+                'disable_inarray_validator' => true,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'matching',
+                    'params' => array(
+                        'criteria' => Criteria::create()->where(
+                                Criteria::expr()->eq('pageCollection', $collection)
+                        ),
+                    ),
+                ),
+                'label_generator' => function($targetEntity) {
+            $parents = $targetEntity->getParentsRecursive();
+            $parents = array_reverse($parents);
+            $hierarchy = '';
+            foreach ($parents as $parent)
+                $hierarchy .= ' > ' . $parent->getTitle();
+            return (empty($hierarchy) ? '' : substr($hierarchy, 3) . ' > ') . $targetEntity->getTitle();
+        },
+            );
+            $e->setOptions($options);
+            $e->setLabel('Parent Item (if applicable)')->getProxy()->setObjectManager($this->entityManager);
+            $form->add($e);
+
+            $form->add(array(
+                'name' => 'routeLabel',
+                'type' => 'text',
+                'attributes' => array(
+                    'required' => 'required',
+                    'placeholder' => 'Route Label',
+                    'class' => 'form-control',
+                ),
+                'options' => array(
+                    'label' => 'Route Label',
+                    'label_attributes' => array(
+                        'class' => 'label',
+                    ),
+                ),
+            ));
+        }
+
         $form->bind($item);
 
         if ($this->getRequest()->isPost()) {

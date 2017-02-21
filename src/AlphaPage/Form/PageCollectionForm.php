@@ -44,6 +44,21 @@ class PageCollectionForm extends Form {
                 ),
             ),
         ));
+
+        $this->add(array(
+            'name' => 'type',
+            'type' => 'Zend\Form\Element\Radio',
+            'attributes' => array(
+                'required' => 'required',
+            ),
+            'options' => array(
+                'label' => 'Type',
+                'value_options' => array(
+                    \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION => 'Nested Items',
+                    \AlphaPage\Entity\PageCollection::LIST_TYPE_COLLECTION => 'Simple List Items',
+                ),
+            ),
+        ));
     }
 
 }

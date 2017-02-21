@@ -59,20 +59,40 @@ class PageCollectionController extends AbstractActionController {
         if (empty($pageCollection))
             return $this->redirect()->toRoute('home');
 
+        if ($pageCollection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION) {
 
-        // If we want to avoid having a list page (go directly to 
-        // If no parent route and page is empty then forward to first route of collection
-        if (empty($parentRoute) && empty($page)) {
             $items = $pageCollection->getItems();
-            $childRoute = $routeRepo->findOneBy(['parentRoute' => $route]);
-            if (empty($items) || empty($childRoute))
+
+            if (empty($items))
                 return $this->redirect()->toRoute('home');
-            else {
-                foreach ($items as $i) {
-                    return $this->redirect()->toRoute($routeName . '/' . $childRoute->getName(), ['param1' => $i->getId(), 'param2' => $i->getTitle()]);
-                }
+
+            $firstItem = $items[0];
+
+            $param1 = $this->params('param1', null);
+            $param2 = $this->params('param2', null);
+            $param3 = $this->params('param3', null);
+
+
+            if (empty($param1)) {
+                $item = $firstItem;
+            } else if (empty($param2)) {
+                $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param1);
+            } else if (empty($param3)) {
+                $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param2);
+            } else {
+                $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param3);
             }
+
+
+            $view = new ViewModel();
+            $view->setTemplate('alpha-page/page/view.phtml');
+            $view->setVariable('page', $page);
+            $view->setVariable('pageCollection', $pageCollection);
+            $view->setVariable('item', $item);
+            return $view;
         }
+
+
 
         //get page collection items for listing
         $pageCollectionItems = $pageCollection->getItems();

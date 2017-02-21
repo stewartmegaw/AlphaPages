@@ -27,6 +27,13 @@ $form->setAttributes(array(
                     <?php echo $this->formInput($form->get('description')->setAttributes(array('class' => 'form-control'))) . $this->formElementErrors($form->get('description')); ?>
                 </div>
 
+                <div class="form-group radio" style="margin-bottom:12px">
+                    <div><b>Type</b></div>
+                    <?php
+                    echo $this->formRadio($form->get('type')) . $this->formElementErrors($form->get('type'));
+                    ?>
+                </div>
+
                 <button class="btn btn-group btn-default btn-animated" type="submit">Create Collection<i class="fa fa-plus"></i></button>
                     <?php echo $this->form()->closeTag(); ?>
             </div>

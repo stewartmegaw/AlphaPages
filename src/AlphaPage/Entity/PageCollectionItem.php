@@ -4,7 +4,6 @@ namespace AlphaPage\Entity;
 
 use Alpha\Entity\AlphaEntity;
 use Doctrine\ORM\Mapping as ORM;
-use AlphaFiles\Entity\AlphaFileInterface;
 
 /**
  * @ORM\Entity
@@ -26,6 +25,9 @@ class PageCollectionItem extends AlphaEntity {
 
     /** @ORM\Column(type="string") */
     protected $title;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    protected $routeLabel;
 
     /** @ORM\Column(type="text", name="small_description") */
     protected $smallDescription;
@@ -65,8 +67,25 @@ class PageCollectionItem extends AlphaEntity {
      */
     protected $files;
 
+    /** @ORM\ManyToOne(targetEntity="PageCollectionItem") */
+    protected $parentItem;
+
     public function __construct() {
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getParentsRecursive($topItemId = null, $includeTopItem = false) {
+        $parents = array();
+
+        if (!empty($this->parentItem)) {
+            if (!(!empty($topItemId) && !$includeTopItem && $this->parentItem->getId() == $topItemId)) {
+                $parents[] = $this->getParentItem();
+                if (!(!empty($topItemId) && $this->parentFilterId->getId() == $topItemId))
+                    $parents = array_merge($parents, $this->getParentItem()->getParentsRecursive($topItemId, $includeTopItem));
+            }
+        }
+
+        return $parents;
     }
 
 }

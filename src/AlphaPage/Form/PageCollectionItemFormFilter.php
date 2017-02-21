@@ -40,6 +40,11 @@ class PageCollectionItemFormFilter extends InputFilter {
             'name' => 'externalUrl',
             'required' => false,
         ));
+
+        $this->add(array(
+            'name' => 'parentItem',
+            'required' => false,
+        ));
     }
 
 }
