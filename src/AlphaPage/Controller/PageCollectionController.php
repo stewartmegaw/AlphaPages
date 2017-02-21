@@ -28,19 +28,20 @@ class PageCollectionController extends AbstractActionController {
 
     //Front end
     public function listAction() {
-
         $request = $this->getRequest();
         $routeName = $this->router->match($request)->getMatchedRouteName();
+
+        $routeRepo = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute');
 
         //Check if route is a child route
         $parentRoute = null;
         if (strpos($routeName, '/') !== false) {
             $parentRouteName = explode('/', $routeName)[0];
             $routeName = explode('/', $routeName)[1];
-            $parentRoute = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+            $parentRoute = $routeRepo->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
         }
 
-        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+        $route = $routeRepo->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
 
         //if child route
         //page collection and page will always be linked to parent route 
@@ -53,9 +54,25 @@ class PageCollectionController extends AbstractActionController {
             $page = $route->getPage();
         }
 
+
         //If no collection is assoicated retun to home
         if (empty($pageCollection))
             return $this->redirect()->toRoute('home');
+
+
+        // If we want to avoid having a list page (go directly to 
+        // If no parent route and page is empty then forward to first route of collection
+        if (empty($parentRoute) && empty($page)) {
+            $items = $pageCollection->getItems();
+            $childRoute = $routeRepo->findOneBy(['parentRoute' => $route]);
+            if (empty($items) || empty($childRoute))
+                return $this->redirect()->toRoute('home');
+            else {
+                foreach ($items as $i) {
+                    return $this->redirect()->toRoute($routeName . '/' . $childRoute->getName(), ['param1' => $i->getId(), 'param2' => $i->getTitle()]);
+                }
+            }
+        }
 
         //get page collection items for listing
         $pageCollectionItems = $pageCollection->getItems();
@@ -100,6 +117,9 @@ class PageCollectionController extends AbstractActionController {
 
         $pageCollectionItem = $this->pageCollectionService->getPageCollectionItemById($id);
         $recentPageCollectionItems = $this->pageCollectionService->getRecentPageCollectionItems($pageCollectionItem->getPageCollection());
+
+        if (!empty($page->getLayout()))
+            $this->layout($page->getLayout());
 
         $view = new ViewModel();
         $view->setTemplate('alpha-page/page/view.phtml');
