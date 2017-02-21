@@ -63,7 +63,7 @@ class PageCollectionService {
         $sql = " SELECT YEAR(DATE) as year, MONTH( DATE ) as month, COUNT( id ) as count
                  FROM  `alpha_page_collection_items`
                  WHERE id <> '-1' AND `page_collection_id` = :id
-                 GROUP BY YEAR( DATE ) , MONTH( DATE )
+                 GROUP BY YEAR( DATE ) , MONTH( DATE ), id DESC
                  ORDER BY DATE DESC";
 
         $prepartedStatement = $this->entityManager->getConnection()->prepare($sql);
