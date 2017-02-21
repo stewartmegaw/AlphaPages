@@ -19,11 +19,13 @@ class PageCollectionControllerFactory implements FactoryInterface {
 
         $router = $serviceLocator->get('router');
         $request = $serviceLocator->get('request');
+        
+        $config = $serviceLocator->get('config');
 
         $routerMatch = $router->match($request);
         $pageCollectionName = $routerMatch->getMatchedRouteName();
 
-        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName);
+        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName, $config);
     }
 
 }

@@ -3,7 +3,7 @@
 namespace AlphaPage\Controller;
 
 use Zend\View\Model\ViewModel;
-use Zend\Mvc\Controller\AbstractActionController;
+use Alpha\Controller\AlphaAppController;
 use Doctrine\ORM\EntityManager;
 use AlphaPage\Service\PageCollectionService;
 use AlphaPage\Form\PageCollectionForm;
@@ -12,14 +12,15 @@ use AlphaPage\Form\PageCollectionFormFilter;
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
  */
-class PageCollectionController extends AbstractActionController {
+class PageCollectionController extends AlphaAppController {
 
     private $entityManager;
     private $pageCollectionService;
     private $pageCollectionName;
     private $router;
 
-    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName) {
+    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config) {
+        parent::__construct($config);
         $this->router = $router;
         $this->entityManager = $entityManager;
         $this->pageCollectionService = $pageCollectionService;
@@ -61,6 +62,9 @@ class PageCollectionController extends AbstractActionController {
 
         if ($pageCollection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION) {
 
+            if (!empty($page->getLayout()))
+                $this->alphaLayoutTemplate = $page->getLayout();
+
             $items = $pageCollection->getItems();
 
             if (empty($items))
@@ -83,13 +87,16 @@ class PageCollectionController extends AbstractActionController {
                 $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param3);
             }
 
-
-            $view = new ViewModel();
-            $view->setTemplate('alpha-page/page/view.phtml');
-            $view->setVariable('page', $page);
-            $view->setVariable('pageCollection', $pageCollection);
-            $view->setVariable('item', $item);
-            return $view;
+            $this->alphaPage = $page;
+            $this->setCollectionItem($item);
+            $this->alphaTemplate = 'alpha-page/page/view.phtml';
+            return $this->alphaReturn();
+//            $view = new ViewModel();
+//            $view->setTemplate('alpha-page/page/view.phtml');
+//            $view->setVariable('page', $page);
+//            $view->setVariable('pageCollection', $pageCollection);
+//            $view->setVariable('item', $item);
+//            return $view;
         }
 
 
