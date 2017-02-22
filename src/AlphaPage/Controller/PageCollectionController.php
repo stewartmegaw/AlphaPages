@@ -4,7 +4,6 @@ namespace AlphaPage\Controller;
 
 use Zend\View\Model\ViewModel;
 use Alpha\Controller\AlphaActionController;
-use Doctrine\ORM\EntityManager;
 use AlphaPage\Service\PageCollectionService;
 use AlphaPage\Form\PageCollectionForm;
 use AlphaPage\Form\PageCollectionFormFilter;
@@ -14,15 +13,13 @@ use AlphaPage\Form\PageCollectionFormFilter;
  */
 class PageCollectionController extends AlphaActionController {
 
-    private $entityManager;
     private $pageCollectionService;
     private $pageCollectionName;
     private $router;
 
-    public function __construct(EntityManager $entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config) {
-        parent::__construct($config);
+    public function __construct($entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService) {
+        parent::__construct($config, $authenticationService, $entityManager);
         $this->router = $router;
-        $this->entityManager = $entityManager;
         $this->pageCollectionService = $pageCollectionService;
         $this->pageCollectionName = $pageCollectionName;
     }

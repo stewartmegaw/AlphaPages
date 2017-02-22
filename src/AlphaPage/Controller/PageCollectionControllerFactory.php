@@ -15,6 +15,7 @@ class PageCollectionControllerFactory implements FactoryInterface {
         $serviceLocator = $sr->getServiceLocator();
         $entityManager = $serviceLocator->get('doctrine.entitymanager.orm_default');
         $pageCollectionService = $serviceLocator->get('AlphaPage\Service\PageCollection');
+        $authenticationService = $serviceLocator->get('AlphaUserBase\Service\Authentication');
 
 
         $router = $serviceLocator->get('router');
@@ -25,7 +26,7 @@ class PageCollectionControllerFactory implements FactoryInterface {
         $routerMatch = $router->match($request);
         $pageCollectionName = $routerMatch->getMatchedRouteName();
 
-        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName, $config);
+        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService);
     }
 
 }

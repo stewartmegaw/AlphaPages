@@ -2,31 +2,26 @@
 
 namespace AlphaPage\Controller;
 
-use Doctrine\ORM\EntityManager;
 use AlphaPage\Service\PageService;
-use Zend\Mvc\Controller\AbstractActionController;
+use Alpha\Controller\AlphaActionController;
 use Zend\View\Model\ViewModel;
 use AlphaPage\Form\PageForm;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
  */
-class PageController extends AbstractActionController {
+class PageController extends AlphaActionController {
 
-    private $config;
     private $pageService;
-    private $entityManager;
     private $services;
     private $page;
-    private $authentication;
-
-    public function __construct($config, EntityManager $entityManager, PageService $pageService, $services, $page) {
-        $this->config = $config;
+    
+    public function __construct($config, $entityManager, PageService $pageService, $services, $page) {
+        parent::__construct($config, $services['authentication'], $entityManager);
+        
         $this->pageService = $pageService;
-        $this->entityManager = $entityManager;
         $this->services = $services;
         $this->page = $page;
-        $this->authentication = $services['authentication'];
     }
 
     public function editAction() {
@@ -43,7 +38,7 @@ class PageController extends AbstractActionController {
         $form->bind($page);
 
         if ($this->getRequest()->isPost()) {
-            $user = $this->authentication->getIdentity();
+            $user = $this->authenticationService->getIdentity();
             $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
 
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
@@ -78,18 +73,14 @@ class PageController extends AbstractActionController {
     public function viewAction() {
 
         if (!empty($this->page->getLayout()))
-            $this->layout($this->page->getLayout());
+            $this->alphaLayoutTemplate = $this->page->getLayout();
 
-        //View Model
-        $viewModel = new ViewModel();
 
         //SET CONTENT AND SERVICE
-        $viewModel->setVariable('page', $this->page);
-        $viewModel->setVariable('services', $this->services);
-        $this->layout()->setVariable('page', $this->page);
-        $this->layout()->setVariable('services', $this->services);
+        $this->setVariable('page', $this->page);
+        $this->setVariable('services', $this->services);
 
-        return $viewModel;
+        return $this->alphaReturn();
     }
 
 }
