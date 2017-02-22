@@ -57,58 +57,6 @@ class PageCollectionController extends AlphaActionController {
         if (empty($pageCollection))
             return $this->redirect()->toRoute('home');
 
-        if ($pageCollection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION) {
-
-            if (!empty($page->getLayout()))
-                $this->alphaLayoutTemplate = $page->getLayout();
-
-            $items = $pageCollection->getItems();
-
-            if (empty($items))
-                return $this->redirect()->toRoute('home');
-
-            $firstItem = $items[0];
-
-            $param1 = $this->params('param1', null);
-            $param2 = $this->params('param2', null);
-            $param3 = $this->params('param3', null);
-
-
-            if (empty($param1)) {
-                $item = $firstItem;
-            } else if (empty($param2)) {
-                $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param1);
-            } else if (empty($param3)) {
-                $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param2);
-            } else {
-                $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param3);
-            }
-
-            $this->setVariable('page', $page);
-            $this->setVariable('item', $item);
-            $child_parents = [];
-            foreach ($pageCollection->getItems() as $i)
-                $child_parents[$i->getId()] = empty($i->getParentItem()) ? null : $i->getParentItem()->getId();
-            $parsedTree = $this->parseTree($child_parents, null, function($id) use ($items) {
-                foreach ($items as $i) {
-                    if ($i->getId() == $id) {
-                        return ['id' => $i->getId(), 'title' => $i->getTitle(), 'routeLabel' => $i->getRouteLabel()];
-                    }
-                }
-            });
-            $this->setVariable('menuTree', $parsedTree);
-            $this->alphaTemplate = 'alpha-page/page/view.phtml';
-            return $this->alphaReturn();
-//            $view = new ViewModel();
-//            $view->setTemplate('alpha-page/page/view.phtml');
-//            $view->setVariable('page', $page);
-//            $view->setVariable('pageCollection', $pageCollection);
-//            $view->setVariable('item', $item);
-//            return $view;
-        }
-
-
-
         //get page collection items for listing
         $pageCollectionItems = $pageCollection->getItems();
 
@@ -129,6 +77,82 @@ class PageCollectionController extends AlphaActionController {
         $view->setVariable('pageCollectionItems', $pageCollectionItems);
         $view->setVariable('pageCollectionCount', $pageCollectionCountsForYearsAndMonths);
         return $view;
+    }
+
+    public function nestedCollectionAction() {
+
+        $request = $this->getRequest();
+        $routeName = $this->router->match($request)->getMatchedRouteName();
+
+        $routeRepo = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute');
+
+        //Check if route is a child route
+        $parentRoute = null;
+        if (strpos($routeName, '/') !== false) {
+            $parentRouteName = explode('/', $routeName)[0];
+            $routeName = explode('/', $routeName)[1];
+            $parentRoute = $routeRepo->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+        }
+
+        $route = $routeRepo->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+
+        //if child route
+        //page collection and page will always be linked to parent route 
+        //child route will just be used for data manipulation
+        if (!empty($parentRoute)) {
+            $pageCollection = $parentRoute->getPageCollection();
+            $page = $parentRoute->getPage();
+        } else {
+            $pageCollection = $route->getPageCollection();
+            $page = $route->getPage();
+        }
+
+
+        //If no collection is assoicated retun to home
+        if (empty($pageCollection))
+            return $this->redirect()->toRoute('home');
+
+
+        if (!empty($page->getLayout()))
+            $this->alphaLayoutTemplate = $page->getLayout();
+
+        $items = $pageCollection->getItems();
+
+        if (empty($items))
+            return $this->redirect()->toRoute('home');
+
+        $firstItem = $items[0];
+
+        $param1 = $this->params('param1', null);
+        $param2 = $this->params('param2', null);
+        $param3 = $this->params('param3', null);
+
+
+        if (empty($param1)) {
+            $item = $firstItem;
+        } else if (empty($param2)) {
+            $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param1);
+        } else if (empty($param3)) {
+            $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param2);
+        } else {
+            $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param3);
+        }
+
+        $this->setVariable('page', $page);
+        $this->setVariable('item', $item);
+        $child_parents = [];
+        foreach ($pageCollection->getItems() as $i)
+            $child_parents[$i->getId()] = empty($i->getParentItem()) ? null : $i->getParentItem()->getId();
+        $parsedTree = $this->parseTree($child_parents, null, function($id) use ($items) {
+            foreach ($items as $i) {
+                if ($i->getId() == $id) {
+                    return ['id' => $i->getId(), 'title' => $i->getTitle(), 'routeLabel' => $i->getRouteLabel()];
+                }
+            }
+        });
+        $this->setVariable('menuTree', $parsedTree);
+        $this->alphaTemplate = 'alpha-page/page/view.phtml';
+        return $this->alphaReturn();
     }
 
     /**
