@@ -140,46 +140,16 @@ class PageCollectionController extends AlphaActionController {
 
         $this->setVariable('page', $page);
         $this->setVariable('item', $item);
-        $child_parents = [];
+        // Useful for building menus and breadcrumbs
+        $allItems = [];
         foreach ($pageCollection->getItems() as $i)
-            $child_parents[$i->getId()] = empty($i->getParentItem()) ? null : $i->getParentItem()->getId();
-        $parsedTree = $this->parseTree($child_parents, null, function($id) use ($items) {
-            foreach ($items as $i) {
-                if ($i->getId() == $id) {
-                    return ['id' => $i->getId(), 'title' => $i->getTitle(), 'routeLabel' => $i->getRouteLabel()];
-                }
-            }
-        });
-        $this->setVariable('menuTree', $parsedTree);
+            $allItems[] = ['id' => $i->getId(), 'title' => $i->getTitle(), 'routeLabel' => $i->getRouteLabel(), 'parentId' => empty($i->getParentItem()) ? null : $i->getParentItem()->getId()];
+        $this->setVariable('allItems', $allItems);
+
         $this->alphaTemplate = 'alpha-page/page/view.phtml';
         return $this->alphaReturn();
     }
 
-    /**
-     * Useful for preparing an array to become a nested list
-     * 
-     * @param type $tree
-     * @param type $root
-     * @param type $markup_fn
-     * @return type
-     */
-    private function parseTree($tree, $root = null, $markup_fn = null) {
-        $return = array();
-        # Traverse the tree and search for direct children of the root
-        foreach ($tree as $child => $parent) {
-            # A direct child is found
-            if ($parent == $root) {
-                # Remove item from tree (we don't need to traverse this again)
-                unset($tree[$child]);
-                # Append the child into result array and parse its children
-                $return[] = !empty($markup_fn) ? $markup_fn($child) : $child;
-                $children = $this->parseTree($tree, $child, $markup_fn);
-                if (!empty($children))
-                    $return[] = $children;
-            }
-        }
-        return empty($return) ? null : $return;
-    }
 
     public function itemAction() {
 
