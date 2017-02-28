@@ -28,8 +28,8 @@ class PageCollectionItem extends AlphaEntity {
 
     /** @ORM\Column(type="string", nullable=true) */
     protected $routeLabel;
-    
-    /** @ORM\Column(type="string", nullable=true) */
+
+    /** @ORM\ManyToOne(targetEntity="PageCollectionItem") */
     protected $redirect;
 
     /** @ORM\Column(type="text", name="small_description") */

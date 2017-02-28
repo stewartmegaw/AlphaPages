@@ -95,20 +95,31 @@ class PageCollectionItemController extends AbstractActionController {
                 ),
             ));
 
-            $form->add(array(
-                'name' => 'redirect',
-                'type' => 'text',
-                'attributes' => array(
-                    'placeholder' => 'Redirect (Optional)',
-                    'class' => 'form-control',
-                ),
-                'options' => array(
-                    'label' => 'Redirect',
-                    'label_attributes' => array(
-                        'class' => 'label',
+            $e = new DoctrineElement\EntitySelect('redirect');
+            $e->setAttributes(array('id' => 'redirectId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
+            $options = array(
+                'property' => 'title',
+                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'empty_option' => "No redirect",
+                'use_hidden_element' => true,
+                'disable_inarray_validator' => true,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'matching',
+                    'params' => array(
+                        'criteria' => Criteria::create()->where(
+                                Criteria::expr()->eq('pageCollection', $pageCollection)
+                        ),
                     ),
                 ),
-            ));
+                'label_generator' => function($targetEntity) {
+
+            return $targetEntity->getId() . ' - ' . $targetEntity->getTitle();
+        },
+            );
+            $e->setOptions($options);
+            $e->setLabel('Redirect To (if applicable)')->getProxy()->setObjectManager($this->entityManager);
+            $form->add($e);
         }
 
 
@@ -191,20 +202,31 @@ class PageCollectionItemController extends AbstractActionController {
                 ),
             ));
 
-            $form->add(array(
-                'name' => 'redirect',
-                'type' => 'text',
-                'attributes' => array(
-                    'placeholder' => 'Redirect (Optional)',
-                    'class' => 'form-control',
-                ),
-                'options' => array(
-                    'label' => 'Redirect',
-                    'label_attributes' => array(
-                        'class' => 'label',
+            $e = new DoctrineElement\EntitySelect('redirect');
+            $e->setAttributes(array('id' => 'redirectId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
+            $options = array(
+                'property' => 'title',
+                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'empty_option' => "No redirect",
+                'use_hidden_element' => true,
+                'disable_inarray_validator' => true,
+                'is_method' => true,
+                'find_method' => array(
+                    'name' => 'matching',
+                    'params' => array(
+                        'criteria' => Criteria::create()->where(
+                                Criteria::expr()->eq('pageCollection', $collection)
+                        ),
                     ),
                 ),
-            ));
+                'label_generator' => function($targetEntity) {
+
+            return $targetEntity->getId() . ' - ' . $targetEntity->getTitle();
+        },
+            );
+            $e->setOptions($options);
+            $e->setLabel('Redirect To (if applicable)')->getProxy()->setObjectManager($this->entityManager);
+            $form->add($e);
         }
 
         $form->bind($item);

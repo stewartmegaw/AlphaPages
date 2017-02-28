@@ -138,8 +138,17 @@ class PageCollectionController extends AlphaActionController {
             $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param3);
         }
 
+        if (empty($item))
+            return $this->redirect()->toRoute('home');
+
+
+
         $this->setVariable('page', $page);
-        $this->setVariable('item', $item);
+        if (!empty($item->getRedirect())) {
+            $this->setVariable('item', $item->getRedirect());
+        } else {
+            $this->setVariable('item', $item);
+        }
         // Useful for building menus and breadcrumbs
         $allItems = [];
         foreach ($pageCollection->getItems() as $i)
@@ -149,7 +158,6 @@ class PageCollectionController extends AlphaActionController {
         $this->alphaTemplate = 'alpha-page/page/view.phtml';
         return $this->alphaReturn();
     }
-
 
     public function itemAction() {
 
