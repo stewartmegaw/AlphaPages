@@ -210,12 +210,12 @@ class PageCollectionService {
         if ($data["externalUrl"] !== "") {
             $item->setExternalUrl($data["externalUrl"]);
         } else {
-            $item->setExternalUrl("www.google.com");
+            $item->setExternalUrl("www.vcgca.org");
         }
         $item->setSmallDescription($data["smallDescription"]);
         $item->setDescription($this->nl2br2($data["description"]));
         $item->setDateCreated($now);
-        $item->setParentItem(!empty($data['parentItem']) ? $this->getPageCollectionItemById($data['parentItem']) : null);
+        $item->setParentItem(isset($data['parentItem']) ? $this->getPageCollectionItemById($data['parentItem']) : null);
         $item->setRouteLabel(isset($data['routeLabel']) ? $data['routeLabel'] : NULL);
 
         if ($data['file']['size'] > 0 || $data['file2']['size'] > 0 || $data['file3']['size'] > 0 || $data['file4']['size'] > 0) {

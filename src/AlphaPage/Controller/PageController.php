@@ -15,10 +15,10 @@ class PageController extends AlphaActionController {
     private $pageService;
     private $services;
     private $page;
-    
+
     public function __construct($config, $entityManager, PageService $pageService, $services, $page) {
         parent::__construct($config, $services['authentication'], $entityManager);
-        
+
         $this->pageService = $pageService;
         $this->services = $services;
         $this->page = $page;
@@ -59,11 +59,13 @@ class PageController extends AlphaActionController {
 
         $name = $this->params('name');
 
+        $page = $this->entityManager->getRepository('AlphaPage\Entity\Page')->findOneBy(['name' => $name]);
+        $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
         $request = $this->getRequest();
         $data = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
-        $page = $this->pageService->updatePage(\AlphaPage\Entity\Page::PREVIEW_PAGE_ID, $data);
+        $p = $this->pageService->updatePage($page->getId(), $route->getName(), $data['content'], '1', $this->authenticationService->getIdentity(), '4');
         $view = new ViewModel();
-        $view->setVariable('page', $page);
+        $view->setVariable('page', $p);
         $view->setVariable('services', $this->services);
         $view->setTemplate('alpha-page/page/view.phtml');
         $view->setVariable('preview', true);
