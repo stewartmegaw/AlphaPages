@@ -94,6 +94,21 @@ class PageCollectionItemController extends AbstractActionController {
                     ),
                 ),
             ));
+
+            $form->add(array(
+                'name' => 'redirect',
+                'type' => 'text',
+                'attributes' => array(
+                    'placeholder' => 'Redirect (Optional)',
+                    'class' => 'form-control',
+                ),
+                'options' => array(
+                    'label' => 'Redirect',
+                    'label_attributes' => array(
+                        'class' => 'label',
+                    ),
+                ),
+            ));
         }
 
 
@@ -175,6 +190,21 @@ class PageCollectionItemController extends AbstractActionController {
                     ),
                 ),
             ));
+
+            $form->add(array(
+                'name' => 'redirect',
+                'type' => 'text',
+                'attributes' => array(
+                    'placeholder' => 'Redirect (Optional)',
+                    'class' => 'form-control',
+                ),
+                'options' => array(
+                    'label' => 'Redirect',
+                    'label_attributes' => array(
+                        'class' => 'label',
+                    ),
+                ),
+            ));
         }
 
         $form->bind($item);
@@ -182,6 +212,7 @@ class PageCollectionItemController extends AbstractActionController {
         if ($this->getRequest()->isPost()) {
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
             $form->setData($data);
+            $form->setInputFilter($filter);
             if ($form->isValid()) {
                 try {
                     $this->pageCollectionService->updatePageCollectionItem($item->getId(), $data);

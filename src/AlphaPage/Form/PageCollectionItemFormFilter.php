@@ -45,6 +45,16 @@ class PageCollectionItemFormFilter extends InputFilter {
             'name' => 'parentItem',
             'required' => false,
         ));
+
+        $this->add(array(
+            'name' => 'routeLabel',
+            'required' => true,
+        ));
+
+        $this->add(array(
+            'name' => 'redirect',
+            'required' => false,
+        ));
     }
 
 }

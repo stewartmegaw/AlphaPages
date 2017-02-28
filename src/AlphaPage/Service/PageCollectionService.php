@@ -185,6 +185,7 @@ class PageCollectionService {
         $item->setPageCollection($collection);
         $item->setParentItem(isset($data['parentItem']) ? $this->getPageCollectionItemById($data['parentItem']) : null);
         $item->setRouteLabel(isset($data['routeLabel']) ? $data['routeLabel'] : NULL);
+        $item->setRedirect(isset($data['redirect']) ? $data['redirect'] : NULL);
 
         $this->alphaFileService->addImageFile($item, $data['file']);
         $this->alphaFileService->addImageFile($item, $data['file2']);
@@ -217,6 +218,7 @@ class PageCollectionService {
         $item->setDateCreated($now);
         $item->setParentItem(isset($data['parentItem']) ? $this->getPageCollectionItemById($data['parentItem']) : null);
         $item->setRouteLabel(isset($data['routeLabel']) ? $data['routeLabel'] : NULL);
+        $item->setRedirect(isset($data['redirect']) ? $data['redirect'] : NULL);
 
         if ($data['file']['size'] > 0 || $data['file2']['size'] > 0 || $data['file3']['size'] > 0 || $data['file4']['size'] > 0) {
             $files = $item->getFiles();

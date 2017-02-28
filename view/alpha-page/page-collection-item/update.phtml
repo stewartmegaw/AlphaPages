@@ -126,6 +126,14 @@ foreach ($files as $file) {
                         ?>
                         <i class="fa fa-pencil form-control-feedback"></i>
                     </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="routeLabel"><b>Redirect (If Applicable)</b></label>
+                        <?php
+                        echo $this->formInput($form->get('redirect')) . $this->formElementErrors($form->get('redirect'));
+                        ?>
+                        <i class="fa fa-pencil form-control-feedback"></i>
+                    </div>
                 <?php endif ?>
 
                 <input value="Preview" class="btn btn-group btn-default"  type="submit" onclick="formPreview(this.form)">
