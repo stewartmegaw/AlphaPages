@@ -130,6 +130,7 @@ class PageCollectionController extends AlphaActionController {
 
         if (empty($param1)) {
             $item = $firstItem;
+            $this->redirect()->toRoute($routeName, ['param1' => $item->getRouteLabel()]);
         } else if (empty($param2)) {
             $item = $this->pageCollectionService->getPageCollectionItemByRouteLabel($pageCollection, $param1);
         } else if (empty($param3)) {
@@ -141,14 +142,33 @@ class PageCollectionController extends AlphaActionController {
         if (empty($item))
             return $this->redirect()->toRoute('home');
 
+        if (!empty($item->getRedirect())) {
 
+            $param1 = null;
+            $param2 = null;
+            $param3 = null;
+
+            $redirect = $item->getRedirect();
+            if (empty($redirect->getParentItem())) {
+                $param1 = $redirect->getRouteLabel();
+            } else {
+                $redirectParent = $redirect->getParentItem();
+                if (empty($redirectParent->getParentItem())) {
+                    $param1 = $redirectParent->getRouteLabel();
+                    $param2 = $redirect->getRouteLabel();
+                } else {
+                    $param1 = $redirect->getParentItem()->getParentItem()->getRouteLabel();
+                    $param2 = $redirect->getParentItem()->getRouteLabel();
+                    $param3 = $redirect->getRouteLabel();
+                }
+            }
+
+            return $this->redirect()->toRoute($routeName, ['param1' => $param1, 'param2' => $param2, 'param3' => $param3]);
+        }
 
         $this->setVariable('page', $page);
-        if (!empty($item->getRedirect())) {
-            $this->setVariable('item', $item->getRedirect());
-        } else {
-            $this->setVariable('item', $item);
-        }
+        $this->setVariable('item', $item);
+
         // Useful for building menus and breadcrumbs
         $allItems = [];
         foreach ($pageCollection->getItems() as $i)
