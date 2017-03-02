@@ -30,38 +30,38 @@ class PageService {
         return $this->entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
     }
 
-    public function updatePage($id, $routeName, $content, $routeGuardRoleId, $user = null, $pageManagerRoleId) {
+    public function updatePage($id, $routeName, $content, $routeGuardRoleId, $user = null, $pageManagerRoleId, $entityManager) {
 
         $now = date_create(date('Y-m-d H:i:s'));
-        $page = $this->entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
+        $page = $entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
         $page->setName($routeName);
         $page->setContent($content);
         $page->setLastModified($now);
-        $page->setEditor($user);
+        $page->setEditor(NULL);
         $page->setPageManagerRole($pageManagerRoleId);
 
-        $routes = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findBy(['page' => $page]);
+        $routes = $entityManager->getRepository('Alpha\Entity\AlphaRoute')->findBy(['page' => $page]);
         foreach ($routes as $route) {
             $route->setName($routeName);
             //$route->setRoute('/' . $routeName);
-            $this->updatePageRouteGuardRole($route, $routeGuardRoleId);
+            $this->updatePageRouteGuardRole($route, $routeGuardRoleId, $entityManager);
         }
 
-        $this->entityManager->flush();
+        $entityManager->flush();
         return $page;
     }
 
-    public function createPage($routeName, $content, $routeGuardRole, $user, $pageManagerRole) {
+    public function createPage($routeName, $content, $routeGuardRole, $user, $pageManagerRole, $entityManager) {
         $now = date_create(date('Y-m-d H:i:s'));
 
         $page = new Page();
         $page->setName($routeName);
-        $page->setEditor($user);
+        $page->setEditor(NULL);
         $page->setContent($content);
         $page->setLastModified($now);
         $page->setLayout(NULL);
         $page->setPageManagerRole($pageManagerRole);
-        $this->entityManager->persist($page);
+        $entityManager->persist($page);
 
         $route = new AlphaRoute();
         $route->setName($routeName);
@@ -72,17 +72,17 @@ class PageService {
         $route->setParentRoute(NULL);
         $route->setPage($page);
         $route->addRouteGuardRole($routeGuardRole);
-        $this->entityManager->persist($route);
+        $entityManager->persist($route);
 
-        $this->entityManager->flush();
+        $entityManager->flush();
     }
 
-    public function deletePage($id) {
+    public function deletePage($id, $entityManager) {
 
-        $page = $this->entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
+        $page = $entityManager->getRepository('AlphaPage\Entity\Page')->find($id);
 
         if (!empty($page)) {
-            $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
+            $route = $entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
             //if page is associated to route, remove all route guard roles and set page as null
             if (!empty($route)) {
                 if (!empty($route->getRouteGuardRoles())) {
@@ -91,31 +91,31 @@ class PageService {
                                 . "WHERE route_id={$route->getId()} "
                                 . "AND role_id={$role->getId()}";
 
-                        $direct_db_connection = $this->entityManager->getConnection();
+                        $direct_db_connection = $entityManager->getConnection();
                         $direct_db_connection->executeUpdate($sql);
                     }
                 }
                 $route->setPage(NULL);
-                $this->entityManager->flush();
+                $entityManager->flush();
             }
-            $this->entityManager->remove($page);
-            $this->entityManager->flush();
+            $entityManager->remove($page);
+            $entityManager->flush();
         }
     }
 
-    public function updatePageRouteGuardRole($route, $roleId) {
+    public function updatePageRouteGuardRole($route, $roleId, $entityManager) {
         $oldRouteGuardRoles = $route->getRouteGuardRoles();
         foreach ($oldRouteGuardRoles as $role) {
             $sql = "DELETE from alpha_routes_guards "
                     . "WHERE route_id={$route->getId()} "
                     . "AND role_id={$role->getId()}";
 
-            $direct_db_connection = $this->entityManager->getConnection();
+            $direct_db_connection = $entityManager->getConnection();
             $direct_db_connection->executeUpdate($sql);
         }
 
         //UPDATING ROLE
-        $newRouteGuardRole = $this->entityManager->getRepository('\AlphaUserBase\Entity\Role')->find($roleId);
+        $newRouteGuardRole = $entityManager->getRepository('\AlphaUserBase\Entity\Role')->find($roleId);
         $route->addRouteGuardRole($newRouteGuardRole);
     }
 
