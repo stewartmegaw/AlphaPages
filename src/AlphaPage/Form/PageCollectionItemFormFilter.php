@@ -48,11 +48,31 @@ class PageCollectionItemFormFilter extends InputFilter {
 
         $this->add(array(
             'name' => 'routeLabel',
-            'required' => true,
+            'required' => false,
         ));
 
         $this->add(array(
             'name' => 'redirect',
+            'required' => false,
+        ));
+        
+        $this->add(array(
+            'name' => 'file',
+            'required' => false,
+        ));
+        
+        $this->add(array(
+            'name' => 'file2',
+            'required' => false,
+        ));
+        
+        $this->add(array(
+            'name' => 'file3',
+            'required' => false,
+        ));
+        
+        $this->add(array(
+            'name' => 'file4',
             'required' => false,
         ));
     }

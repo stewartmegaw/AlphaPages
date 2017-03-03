@@ -53,7 +53,7 @@ class PageCollectionItemController extends AbstractActionController {
             $e->setAttributes(array('id' => 'parentItemId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
             $options = array(
                 'property' => 'title',
-                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'target_class' => 'AlphaPage\AlphaEntity\PageCollectionItem',
                 'empty_option' => "Don't have any parent item",
                 'use_hidden_element' => true,
                 'disable_inarray_validator' => true,
@@ -99,7 +99,7 @@ class PageCollectionItemController extends AbstractActionController {
             $e->setAttributes(array('id' => 'redirectId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
             $options = array(
                 'property' => 'title',
-                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'target_class' => 'AlphaPage\AlphaEntity\PageCollectionItem',
                 'empty_option' => "No redirect",
                 'use_hidden_element' => true,
                 'disable_inarray_validator' => true,
@@ -137,6 +137,8 @@ class PageCollectionItemController extends AbstractActionController {
                     return $this->redirect()->toRoute('alpha-page-collection-items', ['collectionId' => $collectionId, 'action' => 'manage']);
                 }
             }
+
+            $msgs = $form->getMessages();
         }
         return new ViewModel(['form' => $form, 'collection' => $pageCollection]);
     }
@@ -160,7 +162,7 @@ class PageCollectionItemController extends AbstractActionController {
             $e->setAttributes(array('id' => 'parentItemId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
             $options = array(
                 'property' => 'title',
-                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'target_class' => 'AlphaPage\AlphaEntity\PageCollectionItem',
                 'empty_option' => "Don't have any parent item",
                 'use_hidden_element' => true,
                 'disable_inarray_validator' => true,
@@ -206,7 +208,7 @@ class PageCollectionItemController extends AbstractActionController {
             $e->setAttributes(array('id' => 'redirectId', 'type' => 'select', 'allow_empty' => true, 'required' => false));
             $options = array(
                 'property' => 'title',
-                'target_class' => 'AlphaPage\Entity\PageCollectionItem',
+                'target_class' => 'AlphaPage\AlphaEntity\PageCollectionItem',
                 'empty_option' => "No redirect",
                 'use_hidden_element' => true,
                 'disable_inarray_validator' => true,
@@ -229,8 +231,8 @@ class PageCollectionItemController extends AbstractActionController {
             $form->add($e);
         }
 
-        $form->bind($item);
 
+        $form->bind($item);
         if ($this->getRequest()->isPost()) {
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
             $form->setData($data);
@@ -246,7 +248,6 @@ class PageCollectionItemController extends AbstractActionController {
                 }
             }
         }
-
         return new ViewModel(['form' => $form, 'collection' => $collection, 'item' => $item]);
     }
 

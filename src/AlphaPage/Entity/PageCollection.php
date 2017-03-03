@@ -28,7 +28,7 @@ class PageCollection extends AlphaEntity {
     /** @ORM\Column(type="string", nullable=true) */
     protected $description;
 
-    /** @ORM\OneToMany(targetEntity="PageCollectionItem", mappedBy="pageCollection") */
+    /** @ORM\OneToMany(targetEntity="AlphaPage\AlphaEntity\PageCollectionItem", mappedBy="pageCollection") */
     protected $items;
 
     /** @ORM\Column(type="integer") */

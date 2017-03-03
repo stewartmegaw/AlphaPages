@@ -29,7 +29,7 @@ $type = $this->pageCollection;
                     </thead>
                     <tbody>
                         <?php foreach ($items as $pageCollectionItem): ?>
-                            <?php if ($pageCollectionItem->getId() !== AlphaPage\Entity\PageCollectionItem::PREVIEW_ID): ?>
+                            <?php if ($pageCollectionItem->getId() !== AlphaPage\AlphaEntity\PageCollectionItem::PREVIEW_ID): ?>
                                 <tr>
                                     <td><?php echo $pageCollectionItem->getId() ?></td>
                                     <td><?php echo $pageCollectionItem->getTitle() ?></td>

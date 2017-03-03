@@ -4,7 +4,7 @@ namespace AlphaPage\Service;
 
 use Doctrine\ORM\EntityManager;
 use AlphaPage\Entity\PageCollection;
-use AlphaPage\Entity\PageCollectionItem;
+use AlphaPage\AlphaEntity\PageCollectionItem;
 use AlphaFiles\Service\AlphaFileService;
 
 /**
@@ -36,16 +36,16 @@ class PageCollectionService {
     }
 
     public function getPageCollectionItemById($id) {
-        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->find($id);
+        return $this->entityManager->getRepository('AlphaPage\AlphaEntity\PageCollectionItem')->find($id);
     }
 
     public function getPageCollectionItemByRouteLabel($collection, $routeLabel) {
-        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'routeLabel' => $routeLabel]);
+        return $this->entityManager->getRepository('AlphaPage\AlphaEntity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'routeLabel' => $routeLabel]);
     }
 
     public function getPageCollectionItemByParentItemTitleAndItemTitle($collection, $parentItemTitle, $title) {
-        $parentItem = $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'title' => $parentItemTitle]);
-        return $this->entityManager->getRepository('AlphaPage\Entity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'parentItem' => $parentItem, 'title' => $title]);
+        $parentItem = $this->entityManager->getRepository('AlphaPage\AlphaEntity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'title' => $parentItemTitle]);
+        return $this->entityManager->getRepository('AlphaPage\AlphaEntity\PageCollectionItem')->findOneBy(['pageCollection' => $collection, 'parentItem' => $parentItem, 'title' => $title]);
     }
 
     /**
@@ -55,7 +55,7 @@ class PageCollectionService {
      */
     public function getRecentPageCollectionItems($pageCollection) {
         $query = $this->entityManager->createQuery(
-                "SELECT n FROM \AlphaPage\Entity\PageCollectionItem n "
+                "SELECT n FROM \AlphaPage\AlphaEntity\PageCollectionItem n "
                 . "WHERE n.pageCollection = :pageCollection "
                 . "ORDER BY n.id DESC "
         );
@@ -97,7 +97,7 @@ class PageCollectionService {
 
         $query = $this->entityManager->createQuery(
                 "SELECT 
-                    n FROM \AlphaPage\Entity\PageCollectionItem n
+                    n FROM \AlphaPage\AlphaEntity\PageCollectionItem n
                  WHERE 
                     n.date >= :startdate AND 
                     n.date < :enddate   AND

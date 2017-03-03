@@ -43,7 +43,7 @@ class PageController extends AlphaActionController {
 
             $data = array_merge_recursive($this->getRequest()->getPost()->toArray(), $this->getRequest()->getFiles()->toArray());
             $this->pageService->updatePage(
-                    $page->getId(), $page->getName(), $data['content'], $route->getRouteGuardRoles()[0]->getId(), $user, $page->getPageManagerRole()
+                    $page->getId(), $page->getName(), $data['content'], $route->getRouteGuardRoles()[0]->getId(), $user, $page->getPageManagerRole(), $this->entityManager
             );
             $this->flashMessenger()->addSuccessMessage('Page updated succesfully!');
             $this->redirect()->toRoute('dashboard');

@@ -34,14 +34,21 @@ return array(
                 'cache' => 'array',
                 'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Entity')
             ),
+            'alpha_xml_driver' => array(
+                'class' => 'Alpha\MappingDriver\AlphaDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/AlphaEntity')
+            ),
             'orm_default' => array(
                 'drivers' => array(
-                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver',
+                    __NAMESPACE__ . '\AlphaEntity' => 'alpha_xml_driver'
                 )
             ),
             'orm_dynamic' => array(
                 'drivers' => array(
-                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver',
+                    __NAMESPACE__ . '\AlphaEntity' => 'alpha_xml_driver'
                 )
             )
         ),

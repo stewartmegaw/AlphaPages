@@ -85,7 +85,7 @@ foreach ($files as $file) {
                         </div>
                     <?php endif ?>
                     <?php
-                    echo $this->formFile($form->get('file2')->setAttribute('required', null)) . $this->formElementErrors($form->get('file'));
+                    echo $this->formFile($form->get('file2')->setAttribute('required', null)) . $this->formElementErrors($form->get('file2'));
                     ?>
                 </div>
                 <div class="form-group">
@@ -96,7 +96,7 @@ foreach ($files as $file) {
                         </div>
                     <?php endif ?>
                     <?php
-                    echo $this->formFile($form->get('file3')->setAttribute('required', null)) . $this->formElementErrors($form->get('file'));
+                    echo $this->formFile($form->get('file3')->setAttribute('required', null)) . $this->formElementErrors($form->get('file3'));
                     ?>
                 </div><div class="form-group">
                     <label for="file">(Optional)</label>
@@ -106,15 +106,15 @@ foreach ($files as $file) {
                         </div>
                     <?php endif ?>
                     <?php
-                    echo $this->formFile($form->get('file4')->setAttribute('required', null)) . $this->formElementErrors($form->get('file'));
+                    echo $this->formFile($form->get('file4')->setAttribute('required', null)) . $this->formElementErrors($form->get('file4'));
                     ?>
                 </div>
 
-                <hr style="margin-top: 50px;"/>
-                <div style="text-align: center;">
-                    <h4>Nest Collection Items Configuration</h4>
-                </div>
                 <?php if ($this->collection->getType() === \AlphaPage\Entity\PageCollection::NESTED_TYPE_COLLECTION): ?>
+                    <hr style="margin-top: 50px;"/>
+                    <div style="text-align: center;">
+                        <h4>Nest Collection Items Configuration</h4>
+                    </div>
                     <div class="form-group">
                         <label style="font-weight: 400;">Parent Item</label>
                         <?php echo $this->formSelect($form->get('parentItem')->setAttributes(array('class' => 'form-control'))) . $this->formElementErrors($form->get('parentItem')); ?>
@@ -134,7 +134,7 @@ foreach ($files as $file) {
                 <?php endif ?>
 
                 <input value="Preview" class="btn btn-group btn-default"  type="submit" onclick="formPreview(this.form)">
-                <input class="btn btn-group btn-default"  type="submit" onclick="formSubmit(this.form)">                        
+                <input value="Update Item"class="btn btn-group btn-default"  type="submit" onclick="formSubmit(this.form)">                        
                 <?php echo $this->form()->closeTag() ?>
             </div>
         </div>
