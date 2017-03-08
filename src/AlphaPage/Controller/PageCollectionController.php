@@ -7,6 +7,7 @@ use Alpha\Controller\AlphaActionController;
 use AlphaPage\Service\PageCollectionService;
 use AlphaPage\Form\PageCollectionForm;
 use AlphaPage\Form\PageCollectionFormFilter;
+use Alpha\Form\AlphaFormFilter;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
@@ -15,11 +16,10 @@ class PageCollectionController extends AlphaActionController {
 
     private $pageCollectionService;
     private $pageCollectionName;
-    private $router;
 
-    public function __construct($entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService) {
-        parent::__construct($config, $authenticationService, $entityManager);
-        $this->router = $router;
+    public function __construct($entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService, AlphaFormFilter $alphaFormFilter) {
+        parent::__construct($config, $authenticationService, $entityManager, $router, $alphaFormFilter);
+        
         $this->pageCollectionService = $pageCollectionService;
         $this->pageCollectionName = $pageCollectionName;
     }

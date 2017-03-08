@@ -6,6 +6,7 @@ use AlphaPage\Service\PageService;
 use Alpha\Controller\AlphaActionController;
 use Zend\View\Model\ViewModel;
 use AlphaPage\Form\PageForm;
+use Alpha\Form\AlphaFormFilter;
 
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
@@ -16,8 +17,8 @@ class PageController extends AlphaActionController {
     private $services;
     private $page;
 
-    public function __construct($config, $entityManager, PageService $pageService, $services, $page) {
-        parent::__construct($config, $services['authentication'], $entityManager);
+    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter) {
+        parent::__construct($config, $services['authentication'], $entityManager, $router, $alphaFormFilter);
 
         $this->pageService = $pageService;
         $this->services = $services;
@@ -76,7 +77,6 @@ class PageController extends AlphaActionController {
 
         if (!empty($this->page->getLayout()))
             $this->alphaLayoutTemplate = $this->page->getLayout();
-
 
         //SET CONTENT AND SERVICE
         $this->setVariable('page', $this->page);
