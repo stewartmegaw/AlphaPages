@@ -17,8 +17,8 @@ class PageCollectionController extends AlphaActionController {
     private $pageCollectionService;
     private $pageCollectionName;
 
-    public function __construct($entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService, AlphaFormFilter $alphaFormFilter) {
-        parent::__construct($config, $authenticationService, $entityManager, $router, $alphaFormFilter);
+    public function __construct($entityManager, PageCollectionService $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService, AlphaFormFilter $alphaFormFilter, $alphaFormProcess) {
+        parent::__construct($config, $authenticationService, $entityManager, $router, $alphaFormFilter, $alphaFormProcess);
         
         $this->pageCollectionService = $pageCollectionService;
         $this->pageCollectionName = $pageCollectionName;

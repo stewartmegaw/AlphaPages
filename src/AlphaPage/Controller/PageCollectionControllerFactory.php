@@ -27,8 +27,9 @@ class PageCollectionControllerFactory implements FactoryInterface {
         $pageCollectionName = $routerMatch->getMatchedRouteName();
         
         $alphaFormFilter = $serviceLocator->get('Alpha\Form\AlphaFormFilter');
+        $alphaFormProcess = $serviceLocator->get('Alpha\Service\AlphaFormProcess');
 
-        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService, $alphaFormFilter);
+        return new PageCollectionController($entityManager, $pageCollectionService, $router, $pageCollectionName, $config, $authenticationService, $alphaFormFilter, $alphaFormProcess);
     }
 
 }

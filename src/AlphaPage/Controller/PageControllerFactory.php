@@ -36,6 +36,8 @@ class PageControllerFactory implements FactoryInterface {
         $routeName = $routerMatch->getMatchedRouteName();
         
         $alphaFormFilter = $serviceLocator->getServiceLocator()->get('Alpha\Form\AlphaFormFilter');
+        
+        $alphaFormProcess = $serviceLocator->getServiceLocator()->get('Alpha\Service\AlphaFormProcess');
 
         switch ($routeName) {
             case "crud-page":
@@ -60,7 +62,7 @@ class PageControllerFactory implements FactoryInterface {
 
 
 
-        return new PageController($config, $entityManager, $pageService, $services, $page, $router, $alphaFormFilter);
+        return new PageController($config, $entityManager, $pageService, $services, $page, $router, $alphaFormFilter, $alphaFormProcess);
     }
 
 }
