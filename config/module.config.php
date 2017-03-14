@@ -63,8 +63,8 @@ return array(
         'rule_providers' => array(
             'BjyAuthorize\Provider\Rule\Config' => array(
                 'allow' => array(
-                    array(array('admin', 'alpha'), 'Collections', array('edit-view')),
-                    array(array('admin', 'alpha'), 'Page', array('edit'), 'assertion.AlphaPageManager'),
+                    array(array('admin'), 'Collections', array('edit-view')),
+                    array(array('admin'), 'Page', array('edit'), 'assertion.AlphaPageManager'),
                 ),
             ),
         ),
