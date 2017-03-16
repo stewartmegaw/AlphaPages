@@ -28,7 +28,7 @@ class PageCollectionItem extends AlphaEntity {
     protected $parentItem;
 
     public function __construct() {
-        //$this->files = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getParentsRecursive($topItemId = null, $includeTopItem = false) {
