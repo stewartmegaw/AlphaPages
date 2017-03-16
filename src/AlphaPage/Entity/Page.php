@@ -36,7 +36,7 @@ class Page implements ResourceInterface {
     /** @ORM\Column(type="datetime", name="last_modified", nullable=true) */
     protected $lastModified;
 
-    /** @ORM\ManyToOne(targetEntity="\AlphaUserBase\Entity\AlphaUserBase") */
+    /** @ORM\ManyToOne(targetEntity="\AlphaUserBase\AlphaEntity\AlphaUserBase") */
     protected $editor;
 
     /** @ORM\OneToMany(targetEntity="PageDependency", mappedBy="page") */

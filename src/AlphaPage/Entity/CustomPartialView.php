@@ -33,7 +33,7 @@ class CustomPartialView {
     protected $style;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AlphaUserBase\Entity\AlphaUserBase", inversedBy="customViews")
+     * @ORM\ManyToOne(targetEntity="AlphaUserBase\AlphaEntity\AlphaUserBase", inversedBy="customViews")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      *
      */
