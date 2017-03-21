@@ -45,12 +45,6 @@ return array(
                     __NAMESPACE__ . '\AlphaEntity' => 'alpha_xml_driver'
                 )
             ),
-            'orm_dynamic' => array(
-                'drivers' => array(
-                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver',
-                    __NAMESPACE__ . '\AlphaEntity' => 'alpha_xml_driver'
-                )
-            )
         ),
     ),
     'bjyauthorize' => array(
