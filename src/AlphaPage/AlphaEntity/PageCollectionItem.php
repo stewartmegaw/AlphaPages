@@ -44,5 +44,4 @@ class PageCollectionItem extends AlphaEntity {
 
         return $parents;
     }
-
 }
