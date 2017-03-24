@@ -72,6 +72,7 @@ class PageService {
         $route->setParentRoute(NULL);
         $route->setPage($page);
         $route->addRouteGuardRole($routeGuardRole);
+        $route->setStateBuilder(NULL);
         $entityManager->persist($route);
 
         $entityManager->flush();
