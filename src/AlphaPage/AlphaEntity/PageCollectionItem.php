@@ -31,6 +31,23 @@ class PageCollectionItem extends AlphaEntity {
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function getFiles() {
+        return $this->files;
+    }
+
+    public function addFile($file) {
+
+        $this->files[] = $file;
+    }
+
+    public function deleteFile($file) {
+
+        if (!$this->files->contains($file))
+            return;
+
+        $this->files->removeElement($file);
+    }
+
     public function getParentsRecursive($topItemId = null, $includeTopItem = false) {
         $parents = array();
 
@@ -44,4 +61,5 @@ class PageCollectionItem extends AlphaEntity {
 
         return $parents;
     }
+
 }
