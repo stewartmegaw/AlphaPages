@@ -8,9 +8,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
  */
-class PageControllerFactory implements FactoryInterface {
+class PageControllerFactory implements FactoryInterface
+{
 
-    public function createService(ServiceLocatorInterface $serviceLocator) {
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
 
         $services = [];
 
@@ -34,27 +36,44 @@ class PageControllerFactory implements FactoryInterface {
         $services["request"] = $request;
         $routerMatch = $router->match($request);
         $routeName = $routerMatch->getMatchedRouteName();
-        
+
         $alphaFormFilter = $serviceLocator->getServiceLocator()->get('Alpha\Form\AlphaFormFilter');
-        
+
         $alphaFormProcess = $serviceLocator->getServiceLocator()->get('Alpha\Service\AlphaFormProcess');
 
-        switch ($routeName) {
+        switch ($routeName)
+        {
             case "crud-page":
                 $name = $routerMatch->getParam("name");
                 $page = $entityManager->getRepository('AlphaPage\Entity\Page')->findOneBy(['name' => $name]);
                 $dependencies = $page->getDependencies();
-                foreach ($dependencies as $dependency) {
+                foreach ($dependencies as $dependency)
+                {
                     $services[$dependency->getServiceName()] = $serviceLocator->getServiceLocator()->get($dependency->getServiceName());
                 }
                 break;
 
             default:
-                $route = $entityManager->getRepository('\Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => null]);
+                $routeRepo = $entityManager->getRepository('\Alpha\Entity\AlphaRoute');
+
+                $parentRoute = null;
+                if (strpos($routeName, '/') !== false)
+                {
+                    $parentRouteName = explode('/', $routeName)[0];
+                    $routeName = explode('/', $routeName)[1];
+                    $parentRoute = $routeRepo->findOneBy(['name' => $parentRouteName, 'parentRoute' => null]);
+                }
+
+                if (empty($parentRoute))
+                    $route = $entityManager->getRepository('\Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => NULL]);
+                else
+                    $route = $entityManager->getRepository('\Alpha\Entity\AlphaRoute')->findOneBy(['name' => $routeName, 'parentRoute' => $parentRoute]);
+
                 $page = $route->getPage();
                 $dependencies = $page->getDependencies();
 
-                foreach ($dependencies as $dependency) {
+                foreach ($dependencies as $dependency)
+                {
                     $services[$dependency->getServiceName()] = $serviceLocator->getServiceLocator()->get($dependency->getServiceName());
                 }
                 break;
