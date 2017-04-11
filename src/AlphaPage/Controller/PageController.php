@@ -11,13 +11,15 @@ use Alpha\Form\AlphaFormFilter;
 /**
  * @author Haris Mehmood <haris.mehmood@outlook.com>
  */
-class PageController extends AlphaActionController {
+class PageController extends AlphaActionController
+{
 
     private $pageService;
     private $services;
     private $page;
 
-    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter, $alphaFormProcess) {
+    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter, $alphaFormProcess)
+    {
         parent::__construct($config, $services['authentication'], $entityManager, $router, $alphaFormFilter, $alphaFormProcess);
 
         $this->pageService = $pageService;
@@ -25,12 +27,14 @@ class PageController extends AlphaActionController {
         $this->page = $page;
     }
 
-    public function editAction() {
+    public function editAction()
+    {
 
         $name = $this->params('name', null);
         $page = $this->pageService->getPageByName($name);
 
-        if (!$this->isAllowed($page, 'edit')) {
+        if (!$this->isAllowed($page, 'edit'))
+        {
             $this->flashMessenger()->addWarningMessage('You are not allowed to edit this page! Please contact you application administrator');
             return $this->redirect()->toRoute('dashboard');
         }
@@ -38,7 +42,8 @@ class PageController extends AlphaActionController {
         $form = new PageForm();
         $form->bind($page);
 
-        if ($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost())
+        {
             $user = $this->authenticationService->getIdentity();
             $route = $this->entityManager->getRepository('Alpha\Entity\AlphaRoute')->findOneBy(['page' => $page]);
 
@@ -56,7 +61,8 @@ class PageController extends AlphaActionController {
         return $viewModel;
     }
 
-    public function previewAction() {
+    public function previewAction()
+    {
 
         $name = $this->params('name');
 
@@ -73,7 +79,14 @@ class PageController extends AlphaActionController {
         return $view;
     }
 
-    public function viewAction() {
+    public function viewAction()
+    {
+
+        //Create title if specified for route and pass it to layout
+        $this->buildTitle($this->getRoute()->getTitleBuilder());
+
+        //Create meta tags if specified for route and pass it to layout
+        $this->buildMeta($this->getRoute()->getMetaBuilder());
 
         if (!empty($this->page->getLayout()))
             $this->alphaLayoutTemplate = $this->page->getLayout();
@@ -81,6 +94,8 @@ class PageController extends AlphaActionController {
         //SET CONTENT AND SERVICE
         $this->setVariable('page', $this->page);
         $this->setVariable('services', $this->services);
+
+
 
         return $this->alphaReturn();
     }
