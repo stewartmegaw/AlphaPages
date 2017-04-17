@@ -82,11 +82,14 @@ class PageController extends AlphaActionController
     public function viewAction()
     {
 
-        //Create title if specified for route and pass it to layout
+        //Create title if specified for route and pass it to layout and view
         $this->buildTitle($this->getRoute()->getTitleBuilder());
 
-        //Create meta tags if specified for route and pass it to layout
+        //Create meta tags if specified for route and pass it to layout and view
         $this->buildMeta($this->getRoute()->getMetaBuilder());
+
+        //Create state if specified for route and pass it to layout and view
+        $this->buildState($this->getRoute()->getStateBuilder());
 
         if (!empty($this->page->getLayout()))
             $this->alphaLayoutTemplate = $this->page->getLayout();
