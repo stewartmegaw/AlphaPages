@@ -89,7 +89,11 @@ class PageController extends AlphaActionController
         $this->buildMeta($this->getRoute()->getMetaBuilder());
 
         //Create state if specified for route and pass it to layout and view
-        $this->buildState($this->getRoute()->getStateBuilder());
+        $result = $this->alphaStateBuilder->buildState($this->getRoute()->getStateBuilder());
+        if ($result instanceof \Zend\Http\Response)
+            return $result;
+        else
+            $this->setVariables($result);
 
         if (!empty($this->page->getLayout()))
             $this->alphaLayoutTemplate = $this->page->getLayout();
