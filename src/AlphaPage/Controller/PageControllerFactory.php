@@ -79,9 +79,10 @@ class PageControllerFactory implements FactoryInterface
                 break;
         }
 
+        $alphaStateBuilder = $serviceLocator->getServiceLocator()->get('AlphaAdmin\Service\AlphaAdminStateBuilder');
 
 
-        return new PageController($config, $entityManager, $pageService, $services, $page, $router, $alphaFormFilter, $alphaFormProcess);
+        return new PageController($config, $entityManager, $pageService, $services, $page, $router, $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder);
     }
 
 }

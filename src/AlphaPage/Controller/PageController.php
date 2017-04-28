@@ -18,9 +18,9 @@ class PageController extends AlphaActionController
     private $services;
     private $page;
 
-    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter, $alphaFormProcess)
+    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder)
     {
-        parent::__construct($config, $services['authentication'], $entityManager, $router, $alphaFormFilter, $alphaFormProcess);
+        parent::__construct($config, $services['authentication'], $entityManager, $router, $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder);
 
         $this->pageService = $pageService;
         $this->services = $services;
