@@ -18,9 +18,9 @@ class PageController extends AlphaActionController
     private $services;
     private $page;
 
-    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder)
+    public function __construct($config, $entityManager, PageService $pageService, $services, $page, $router, AlphaFormFilter $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder, $headerService)
     {
-        parent::__construct($config, $services['authentication'], $entityManager, $router, $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder);
+        parent::__construct($config, $services['authentication'], $entityManager, $router, $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder,$headerService);
 
         $this->pageService = $pageService;
         $this->services = $services;
@@ -83,10 +83,10 @@ class PageController extends AlphaActionController
     {
 
         //Create title if specified for route and pass it to layout and view
-        $this->buildTitle($this->getRoute()->getTitleBuilder());
+        $this->layout()->setVariables($this->headerService->buildTitle($this->getRoute()->getTitleBuilder()));
 
         //Create meta tags if specified for route and pass it to layout and view
-        $this->buildMeta($this->getRoute()->getMetaBuilder());
+        $this->layout()->setVariables($this->headerService->buildMeta($this->getRoute()->getMetaBuilder()));
 
         //Create state if specified for route and pass it to layout and view
         $result = $this->alphaStateBuilder->buildState($this->getRoute()->getStateBuilder());

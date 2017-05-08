@@ -80,9 +80,10 @@ class PageControllerFactory implements FactoryInterface
         }
 
         $alphaStateBuilder = $serviceLocator->getServiceLocator()->get('Alpha\Service\AlphaStateBuilder');
+        $headerService = $serviceLocator->getServiceLocator()->get('Alpha\Service\Header');
 
 
-        return new PageController($config, $entityManager, $pageService, $services, $page, $router, $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder);
+        return new PageController($config, $entityManager, $pageService, $services, $page, $router, $alphaFormFilter, $alphaFormProcess, $alphaStateBuilder, $headerService);
     }
 
 }
