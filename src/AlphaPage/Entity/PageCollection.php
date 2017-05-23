@@ -2,14 +2,14 @@
 
 namespace AlphaPage\Entity;
 
-use Alpha\Entity\AlphaEntity;
+use Alpha\Entity\AlphaEntityBase;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="alpha_page_collections") 
  */
-class PageCollection extends AlphaEntity {
+class PageCollection extends AlphaEntityBase {
 
     const NESTED_TYPE_COLLECTION = 1;
     const LIST_TYPE_COLLECTION = 2;
