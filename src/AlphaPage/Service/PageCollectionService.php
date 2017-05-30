@@ -141,7 +141,7 @@ class PageCollectionService {
 
     public function deletePageCollection($id) {
 
-        $adapter = new \RdnUpload\Adapter\Local('data/uploads', '/files');
+        $adapter = new \RdnUpload\Adapter\Local('../Data/'.getenv('APP_ID').'data-'.getenv('APP_NAME').'/public/uploads', '/files/uploads');
         $uploads = new \RdnUpload\Container($adapter);
 
         $collection = $this->getPageCollectionById($id);
@@ -199,7 +199,7 @@ class PageCollectionService {
 
     public function updatePageCollectionItem($id, $data) {
 
-        $adapter = new \RdnUpload\Adapter\Local('data/uploads', '/files');
+        $adapter = new \RdnUpload\Adapter\Local('../Data/'.getenv('APP_ID').'data-'.getenv('APP_NAME').'/public/uploads', '/files/uploads');
         $uploads = new \RdnUpload\Container($adapter);
 
         $item = $this->getPageCollectionItemById($id);
@@ -239,7 +239,7 @@ class PageCollectionService {
 
     public function deletePageCollectionItem($id) {
 
-        $adapter = new \RdnUpload\Adapter\Local('data/uploads', '/files');
+        $adapter = new \RdnUpload\Adapter\Local('../Data/'.getenv('APP_ID').'data-'.getenv('APP_NAME').'/public/uploads', '/files/uploads');
         $uploads = new \RdnUpload\Container($adapter);
 
         $item = $this->getPageCollectionItemById($id);
